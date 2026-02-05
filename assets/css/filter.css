@@ -1,0 +1,693 @@
+/**
+ * AJAX Product Filter Styles
+ * Clean, professional B2B industrial aesthetic
+ */
+
+/* CSS Custom Properties */
+:root {
+    --apf-primary: #1e4164;
+    --apf-primary-hover: #163350;
+    --apf-text: #1a1a1a;
+    --apf-text-muted: #6b7280;
+    --apf-text-light: #9ca3af;
+    --apf-border: #e5e7eb;
+    --apf-border-dark: #d1d5db;
+    --apf-bg: #f5f5f5;
+    --apf-bg-card: #ffffff;
+    --apf-bg-image: #f0f0f0;
+    --apf-white: #ffffff;
+    --apf-shadow-card: 0 2px 8px rgba(0, 0, 0, 0.06);
+    --apf-radius: 8px;
+    --apf-radius-sm: 6px;
+    --apf-radius-lg: 12px;
+    --apf-transition: 0.2s ease;
+}
+
+/* ==========================================================================
+   Layout Container
+   ========================================================================== */
+
+.apf-filter-layout {
+    display: flex;
+    gap: 2rem;
+    align-items: flex-start;
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 1.5rem;
+}
+
+/* ==========================================================================
+   Filter Sidebar
+   ========================================================================== */
+
+.apf-filter-sidebar {
+    width: 260px;
+    flex-shrink: 0;
+}
+
+.apf-filter-panel {
+    background: var(--apf-bg-card);
+    border-radius: var(--apf-radius-lg);
+    padding: 1.25rem;
+    box-shadow: var(--apf-shadow-card);
+}
+
+/* Mobile Toggle (hidden on desktop) */
+.apf-mobile-toggle {
+    display: none;
+    width: 100%;
+    padding: 0.75rem 1rem;
+    background: var(--apf-bg-card);
+    border: 1px solid var(--apf-border);
+    border-radius: var(--apf-radius);
+    cursor: pointer;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    font-size: 0.9375rem;
+    font-weight: 500;
+    color: var(--apf-text);
+    transition: all var(--apf-transition);
+}
+
+.apf-mobile-toggle:hover {
+    background: var(--apf-bg);
+}
+
+.apf-panel-close {
+    display: none;
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--apf-text-muted);
+    padding: 0.25rem;
+}
+
+.apf-panel-close:hover {
+    color: var(--apf-text);
+}
+
+/* Overlay (mobile only) */
+.apf-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 998;
+}
+
+/* ==========================================================================
+   Search Box
+   ========================================================================== */
+
+.apf-search-box {
+    position: relative;
+    margin-bottom: 1.25rem;
+}
+
+.apf-search-icon {
+    display: none;
+}
+
+.apf-search-input {
+    width: 100%;
+    padding: 0.625rem 0.875rem;
+    border: 1px solid var(--apf-border);
+    border-radius: var(--apf-radius-sm);
+    font-size: 0.875rem;
+    color: var(--apf-text);
+    background: var(--apf-bg-card);
+    transition: border-color var(--apf-transition), box-shadow var(--apf-transition);
+}
+
+.apf-search-input:focus {
+    outline: none;
+    border-color: var(--apf-primary);
+    box-shadow: 0 0 0 3px rgba(30, 65, 100, 0.1);
+}
+
+.apf-search-input::placeholder {
+    color: var(--apf-text-light);
+}
+
+/* ==========================================================================
+   Filter Groups
+   ========================================================================== */
+
+.apf-filter-groups {
+    /* No bottom margin, removed CTA */
+}
+
+.apf-filter-group {
+    border-bottom: 1px solid var(--apf-border);
+    padding-bottom: 0.25rem;
+}
+
+.apf-filter-group:last-child {
+    border-bottom: none;
+}
+
+.apf-filter-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    padding: 0.75rem 0;
+    background: none;
+    border: none;
+    cursor: pointer;
+    text-align: left;
+}
+
+.apf-filter-title {
+    font-size: 0.9375rem;
+    font-weight: 600;
+    color: var(--apf-text);
+}
+
+.apf-chevron {
+    color: var(--apf-text-muted);
+    transition: transform var(--apf-transition);
+    width: 18px;
+    height: 18px;
+}
+
+.apf-filter-header[aria-expanded="true"] .apf-chevron {
+    transform: rotate(180deg);
+}
+
+.apf-filter-content {
+    padding-bottom: 0.75rem;
+    display: block;
+}
+
+.apf-filter-group.apf-collapsed .apf-filter-content {
+    display: none;
+}
+
+/* ==========================================================================
+   Checkboxes - Circular style matching design
+   ========================================================================== */
+
+.apf-checkbox-label {
+    display: flex;
+    align-items: center;
+    gap: 0.625rem;
+    padding: 0.3125rem 0;
+    cursor: pointer;
+    user-select: none;
+}
+
+.apf-checkbox {
+    position: absolute;
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.apf-checkbox-custom {
+    flex-shrink: 0;
+    width: 18px;
+    height: 18px;
+    border: 2px solid var(--apf-border-dark);
+    border-radius: 50%;
+    background: var(--apf-white);
+    position: relative;
+    transition: all var(--apf-transition);
+}
+
+.apf-checkbox:checked + .apf-checkbox-custom {
+    background: var(--apf-primary);
+    border-color: var(--apf-primary);
+}
+
+.apf-checkbox:checked + .apf-checkbox-custom::after {
+    content: '';
+    position: absolute;
+    left: 5px;
+    top: 2px;
+    width: 4px;
+    height: 8px;
+    border: solid var(--apf-white);
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg);
+}
+
+.apf-checkbox:focus + .apf-checkbox-custom {
+    box-shadow: 0 0 0 3px rgba(30, 65, 100, 0.15);
+}
+
+.apf-checkbox-label:hover .apf-checkbox-custom {
+    border-color: var(--apf-primary);
+}
+
+.apf-checkbox-text {
+    font-size: 0.875rem;
+    color: var(--apf-text);
+    line-height: 1.3;
+}
+
+.apf-term-count {
+    color: var(--apf-text-muted);
+    font-size: 0.8125rem;
+    margin-left: 0.25rem;
+}
+
+/* ==========================================================================
+   Clear All Button
+   ========================================================================== */
+
+.apf-clear-all {
+    width: 100%;
+    padding: 0.625rem 1rem;
+    margin-top: 1rem;
+    background: none;
+    border: 1px solid var(--apf-border);
+    border-radius: var(--apf-radius-sm);
+    color: var(--apf-text-muted);
+    font-size: 0.875rem;
+    cursor: pointer;
+    transition: all var(--apf-transition);
+}
+
+.apf-clear-all:hover {
+    border-color: var(--apf-primary);
+    color: var(--apf-primary);
+}
+
+/* ==========================================================================
+   Product Grid Wrapper
+   ========================================================================== */
+
+.apf-product-grid-wrapper {
+    flex: 1;
+    min-width: 0;
+    position: relative;
+}
+
+/* ==========================================================================
+   Grid Header
+   ========================================================================== */
+
+.apf-grid-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.25rem;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.apf-grid-info {
+    display: flex;
+    align-items: baseline;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+}
+
+.apf-grid-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--apf-text);
+    margin: 0;
+}
+
+.apf-product-count {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--apf-text);
+}
+
+.apf-count-number::before {
+    content: '(';
+}
+
+.apf-count-number::after {
+    content: ' Products)';
+}
+
+/* Sort Dropdown */
+.apf-sort-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.apf-sort-label {
+    font-size: 0.875rem;
+    color: var(--apf-text-muted);
+}
+
+.apf-sort-select {
+    padding: 0.5rem 2.25rem 0.5rem 0.875rem;
+    border: 1px solid var(--apf-border);
+    border-radius: var(--apf-radius-sm);
+    background: var(--apf-bg-card) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%236b7280' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E") no-repeat right 0.625rem center;
+    background-size: 14px;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--apf-text);
+    cursor: pointer;
+    appearance: none;
+    -webkit-appearance: none;
+}
+
+.apf-sort-select:focus {
+    outline: none;
+    border-color: var(--apf-primary);
+}
+
+/* ==========================================================================
+   Product Grid
+   ========================================================================== */
+
+.apf-product-grid {
+    display: grid;
+    gap: 1.25rem;
+}
+
+.apf-columns-1 {
+    grid-template-columns: 1fr;
+}
+
+.apf-columns-2 {
+    grid-template-columns: repeat(2, 1fr);
+}
+
+.apf-columns-3 {
+    grid-template-columns: repeat(3, 1fr);
+}
+
+.apf-columns-4 {
+    grid-template-columns: repeat(4, 1fr);
+}
+
+/* ==========================================================================
+   Product Card
+   ========================================================================== */
+
+.apf-product-card {
+    background: var(--apf-bg-card);
+    border: 1px solid var(--apf-border);
+    border-radius: var(--apf-radius-lg);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    transition: box-shadow var(--apf-transition), transform var(--apf-transition);
+}
+
+.apf-product-card:hover {
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+    transform: translateY(-2px);
+}
+
+/* Card Image */
+.apf-card-image {
+    aspect-ratio: 4/3;
+    overflow: hidden;
+    background: var(--apf-bg-image);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+}
+
+.apf-card-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    transition: transform 0.3s ease;
+}
+
+.apf-product-card:hover .apf-card-image img {
+    transform: scale(1.03);
+}
+
+/* Card Content */
+.apf-card-content {
+    padding: 1.25rem;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    border-top: 1px solid var(--apf-border);
+}
+
+/* Product Label Tag */
+.apf-category-tag {
+    display: inline-block;
+    font-size: 0.6875rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--apf-primary);
+    margin-bottom: 0.375rem;
+    opacity: 0.7;
+}
+
+/* Card Title */
+.apf-card-title {
+    font-size: 1rem;
+    font-weight: 700;
+    margin: 0 0 0.875rem 0;
+    line-height: 1.35;
+    color: var(--apf-primary);
+}
+
+.apf-card-title a {
+    color: inherit;
+    text-decoration: none;
+}
+
+.apf-card-title a:hover {
+    text-decoration: underline;
+}
+
+/* Specifications Table */
+.apf-specs-table {
+    margin: 0 0 1.25rem 0;
+    font-size: 0.8125rem;
+}
+
+.apf-spec-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    padding: 0.25rem 0;
+}
+
+.apf-specs-table dt {
+    color: var(--apf-text-muted);
+    font-weight: 400;
+}
+
+.apf-specs-table dd {
+    color: var(--apf-text);
+    font-weight: 600;
+    margin: 0;
+    text-align: right;
+}
+
+/* Card Actions */
+.apf-card-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 0.625rem;
+    margin-top: auto;
+}
+
+.apf-btn {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    font-size: 0.875rem;
+    font-weight: 600;
+    text-align: center;
+    text-decoration: none;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: all var(--apf-transition);
+    border: 2px solid transparent;
+}
+
+.apf-btn-primary {
+    background: var(--apf-primary);
+    color: var(--apf-white);
+    border-color: var(--apf-primary);
+}
+
+.apf-btn-primary:hover {
+    background: var(--apf-primary-hover);
+    border-color: var(--apf-primary-hover);
+    color: var(--apf-white);
+}
+
+.apf-btn-secondary {
+    background: var(--apf-white);
+    color: var(--apf-primary);
+    border-color: var(--apf-primary);
+}
+
+.apf-btn-secondary:hover {
+    background: var(--apf-primary);
+    color: var(--apf-white);
+}
+
+/* ==========================================================================
+   No Results
+   ========================================================================== */
+
+.apf-no-results {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 3rem 2rem;
+    background: var(--apf-bg-card);
+    border-radius: var(--apf-radius-lg);
+    border: 1px solid var(--apf-border);
+}
+
+.apf-no-results p {
+    margin: 0 0 0.5rem 0;
+    color: var(--apf-text-muted);
+}
+
+.apf-no-results a {
+    color: var(--apf-primary);
+    text-decoration: underline;
+}
+
+.apf-no-results a:hover {
+    text-decoration: none;
+}
+
+/* ==========================================================================
+   Loading Overlay
+   ========================================================================== */
+
+.apf-loading-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(255, 255, 255, 0.85);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 10;
+    border-radius: var(--apf-radius);
+}
+
+.apf-product-grid-wrapper.apf-loading .apf-loading-overlay {
+    display: flex;
+}
+
+.apf-spinner {
+    width: 36px;
+    height: 36px;
+    border: 3px solid var(--apf-border);
+    border-top-color: var(--apf-primary);
+    border-radius: 50%;
+    animation: apf-spin 0.7s linear infinite;
+}
+
+@keyframes apf-spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* ==========================================================================
+   Mobile Responsive
+   ========================================================================== */
+
+@media (max-width: 1024px) {
+    .apf-columns-4 {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+@media (max-width: 900px) {
+    .apf-columns-3,
+    .apf-columns-4 {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 768px) {
+    /* Layout */
+    .apf-filter-layout {
+        flex-direction: column;
+        padding: 1rem;
+    }
+
+    .apf-filter-sidebar {
+        width: 100%;
+    }
+
+    /* Mobile Toggle */
+    .apf-mobile-toggle {
+        display: flex;
+    }
+
+    /* Filter Panel - Drawer */
+    .apf-filter-panel {
+        position: fixed;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        width: 300px;
+        max-width: 85vw;
+        z-index: 999;
+        border-radius: 0;
+        overflow-y: auto;
+        transform: translateX(-100%);
+        transition: transform 0.3s ease;
+    }
+
+    .apf-filter-sidebar.apf-drawer-open .apf-filter-panel {
+        transform: translateX(0);
+    }
+
+    .apf-filter-sidebar.apf-drawer-open .apf-overlay {
+        display: block;
+    }
+
+    .apf-panel-close {
+        display: block;
+    }
+
+    /* Grid Header */
+    .apf-grid-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .apf-grid-title {
+        font-size: 1.25rem;
+    }
+
+    .apf-product-count {
+        font-size: 1.25rem;
+    }
+
+    .apf-sort-wrapper {
+        width: 100%;
+    }
+
+    .apf-sort-select {
+        flex: 1;
+    }
+}
+
+@media (max-width: 540px) {
+    .apf-columns-2,
+    .apf-columns-3,
+    .apf-columns-4 {
+        grid-template-columns: 1fr;
+    }
+}
