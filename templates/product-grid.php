@@ -17,10 +17,11 @@ $product_application = isset($atts['product_application']) ? $atts['product_appl
 $limit = isset($atts['limit']) ? $atts['limit'] : '';
 $show_count = !empty($atts['show_count']);
 $show_sort = !empty($atts['show_sort']);
+$show_description = !empty($atts['show_description']);
 $show_header = !empty($atts['title']) || $show_count || $show_sort;
 ?>
 
-<div class="apf-product-grid-wrapper" data-columns="<?php echo esc_attr($columns); ?>" data-quote-url="<?php echo esc_attr($quote_url); ?>" data-product-type="<?php echo esc_attr($product_type); ?>" data-product-application="<?php echo esc_attr($product_application); ?>" data-limit="<?php echo esc_attr($limit); ?>">
+<div class="apf-product-grid-wrapper" data-columns="<?php echo esc_attr($columns); ?>" data-quote-url="<?php echo esc_attr($quote_url); ?>" data-product-type="<?php echo esc_attr($product_type); ?>" data-product-application="<?php echo esc_attr($product_application); ?>" data-limit="<?php echo esc_attr($limit); ?>" data-show-description="<?php echo esc_attr($show_description ? '1' : ''); ?>">
 
     <?php if ($show_header) : ?>
     <!-- Grid Header -->

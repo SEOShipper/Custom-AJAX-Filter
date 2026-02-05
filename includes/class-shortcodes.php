@@ -56,6 +56,7 @@ class APF_Shortcodes {
             'product_type' => '',
             'product_application' => '',
             'limit' => '',
+            'show_description' => '',
         ), $atts, 'product_grid');
 
         // Auto-detect display-only mode when limit is set
@@ -67,6 +68,7 @@ class APF_Shortcodes {
             ? filter_var($atts['show_count'], FILTER_VALIDATE_BOOLEAN)
             : !$has_limit;
         $atts['limit'] = $has_limit ? intval($atts['limit']) : '';
+        $atts['show_description'] = filter_var($atts['show_description'], FILTER_VALIDATE_BOOLEAN);
         $atts['columns'] = intval($atts['columns']);
 
         // Get initial products

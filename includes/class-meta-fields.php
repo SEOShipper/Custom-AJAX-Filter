@@ -30,6 +30,11 @@ class APF_Meta_Fields {
             'type' => 'text',
             'placeholder' => 'e.g., 180°F',
         ),
+        '_product_description' => array(
+            'label' => 'Product Description',
+            'type' => 'textarea',
+            'placeholder' => 'Brief product description for showcase cards',
+        ),
     );
 
     public static function get_instance() {
@@ -54,7 +59,7 @@ class APF_Meta_Fields {
                 'type' => 'string',
                 'single' => true,
                 'show_in_rest' => true,
-                'sanitize_callback' => 'sanitize_text_field',
+                'sanitize_callback' => ($config['type'] === 'textarea') ? 'sanitize_textarea_field' : 'sanitize_text_field',
                 'auth_callback' => function($allowed, $meta_key, $post_id) {
                     return current_user_can('edit_post', $post_id);
                 },
@@ -93,6 +98,15 @@ class APF_Meta_Fields {
                     <label for="<?php echo esc_attr($key); ?>"><?php echo esc_html($config['label']); ?></label>
                 </th>
                 <td>
+                    <?php if ($config['type'] === 'textarea') : ?>
+                    <textarea
+                        id="<?php echo esc_attr($key); ?>"
+                        name="<?php echo esc_attr($key); ?>"
+                        class="large-text"
+                        rows="4"
+                        placeholder="<?php echo esc_attr($config['placeholder']); ?>"
+                    ><?php echo esc_textarea($value); ?></textarea>
+                    <?php else : ?>
                     <input
                         type="<?php echo esc_attr($config['type']); ?>"
                         id="<?php echo esc_attr($key); ?>"
@@ -101,6 +115,7 @@ class APF_Meta_Fields {
                         class="regular-text"
                         placeholder="<?php echo esc_attr($config['placeholder']); ?>"
                     />
+                    <?php endif; ?>
                 </td>
             </tr>
             <?php
@@ -132,7 +147,9 @@ class APF_Meta_Fields {
         // Save each field
         foreach ($this->meta_fields as $key => $config) {
             if (isset($_POST[$key])) {
-                $value = sanitize_text_field($_POST[$key]);
+                $value = ($config['type'] === 'textarea')
+                    ? sanitize_textarea_field($_POST[$key])
+                    : sanitize_text_field($_POST[$key]);
                 update_post_meta($post_id, $key, $value);
             }
         }

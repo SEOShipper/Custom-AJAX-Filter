@@ -198,7 +198,8 @@
                 quote_url: this.elements.gridWrapper.data('quote-url') || '/contact/',
                 product_type: this.elements.gridWrapper.data('product-type') || '',
                 product_application: this.elements.gridWrapper.data('product-application') || '',
-                limit: this.elements.gridWrapper.data('limit') || ''
+                limit: this.elements.gridWrapper.data('limit') || '',
+                show_description: this.elements.gridWrapper.data('show-description') || ''
             };
 
             // Add filter taxonomies
@@ -271,7 +272,8 @@
                 quote_url: this.elements.gridWrapper.data('quote-url') || '/contact/',
                 product_type: this.elements.gridWrapper.data('product-type') || '',
                 product_application: this.elements.gridWrapper.data('product-application') || '',
-                limit: this.elements.gridWrapper.data('limit') || ''
+                limit: this.elements.gridWrapper.data('limit') || '',
+                show_description: this.elements.gridWrapper.data('show-description') || ''
             };
 
             $.each(this.state.filters, function(taxonomy, terms) {

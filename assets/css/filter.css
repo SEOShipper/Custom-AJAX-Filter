@@ -493,6 +493,14 @@
     text-align: right;
 }
 
+/* Card Description (replaces specs table when show_description is enabled) */
+.apf-card-description {
+    font-size: 0.8125rem;
+    line-height: 1.6;
+    color: var(--apf-text-muted);
+    margin: 0 0 1.25rem 0;
+}
+
 /* Card Actions */
 .apf-card-actions {
     display: flex;

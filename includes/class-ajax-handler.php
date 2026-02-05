@@ -120,6 +120,9 @@ class APF_Ajax_Handler {
         // Get quote URL from request or default
         $quote_url = isset($_POST['quote_url']) ? esc_url($_POST['quote_url']) : '/contact/';
 
+        // Show description instead of specs table
+        $show_description = !empty($_POST['show_description']);
+
         // Run query
         $query = new WP_Query($args);
 

@@ -22,6 +22,7 @@ if ($product_labels && !is_wp_error($product_labels)) {
 $flow_rate = get_post_meta($post_id, '_product_flow_rate', true);
 $micron = get_post_meta($post_id, '_product_micron', true);
 $temp = get_post_meta($post_id, '_product_temp', true);
+$description = get_post_meta($post_id, '_product_description', true);
 
 // Get thumbnail
 $thumbnail_url = get_the_post_thumbnail_url($post_id, 'medium');
@@ -61,8 +62,10 @@ $quote_url_with_product = add_query_arg('product', urlencode(get_the_title()), $
             <a href="<?php the_permalink(); ?>"><?php the_title(); ?></a>
         </h3>
 
-        <!-- Specifications Table -->
-        <?php if ($flow_rate || $micron || $temp) : ?>
+        <!-- Description or Specifications -->
+        <?php if (!empty($show_description) && $description) : ?>
+        <p class="apf-card-description"><?php echo esc_html($description); ?></p>
+        <?php elseif ($flow_rate || $micron || $temp) : ?>
         <dl class="apf-specs-table">
             <?php if ($flow_rate) : ?>
             <div class="apf-spec-row">
