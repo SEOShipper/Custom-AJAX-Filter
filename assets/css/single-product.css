@@ -1,0 +1,879 @@
+/**
+ * Single Product Page
+ *
+ * Design tokens from Figma:
+ *   Navy:   #1c3a8a   Green:  #3f9f44   Gold:  #f5a623
+ *   Font:   Outfit (headings) / DM Sans (body)
+ */
+
+/* ==========================================================================
+   Custom Properties
+   ========================================================================== */
+
+.apf-sp {
+	--navy:       #1c3a8a;
+	--navy-dark:  #142d6e;
+	--navy-10:    rgba(28, 58, 138, .08);
+	--green:      #3f9f44;
+	--green-dark: #348a38;
+	--green-10:   rgba(63, 159, 68, .1);
+	--green-bg:   #eaf5eb;
+	--gold:       #f5a623;
+	--text:       #2d3436;
+	--text-mid:   #505a5e;
+	--text-muted: #7b8794;
+	--border:     #e2e6ea;
+	--bg:         #ffffff;
+	--bg-light:   #f7f8fa;
+	--bg-warm:    #f4f6f9;
+	--radius:     12px;
+	--radius-sm:  8px;
+	--radius-xs:  6px;
+	--shadow:     0 2px 12px rgba(0,0,0,.06);
+	--shadow-lg:  0 8px 30px rgba(0,0,0,.09);
+	--heading:    'Outfit', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+	--body:       'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+	--ease:       cubic-bezier(.4, 0, .2, 1);
+}
+
+.apf-sp {
+	font-family: var(--body);
+	color: var(--text);
+	line-height: 1.6;
+	-webkit-font-smoothing: antialiased;
+}
+
+.apf-sp *, .apf-sp *::before, .apf-sp *::after {
+	box-sizing: border-box;
+}
+
+/* ==========================================================================
+   Container
+   ========================================================================== */
+
+.apf-sp-container {
+	width: 100%;
+	max-width: 1200px;
+	margin: 0 auto;
+	padding: 0 2rem;
+}
+
+/* ==========================================================================
+   Scroll Reveal
+   ========================================================================== */
+
+.apf-sp-reveal {
+	opacity: 0;
+	transform: translateY(32px);
+	transition: opacity .7s var(--ease), transform .7s var(--ease);
+}
+
+.apf-sp-reveal.revealed {
+	opacity: 1;
+	transform: translateY(0);
+}
+
+/* ==========================================================================
+   SECTION 1 — HERO
+   ========================================================================== */
+
+.apf-sp-hero {
+	padding: 1rem 0 3.5rem;
+	background: var(--bg);
+}
+
+/* ---- Breadcrumb ---- */
+
+.apf-sp-breadcrumb {
+	font-size: .8125rem;
+	color: var(--text-muted);
+	margin-bottom: 1.75rem;
+	font-family: var(--body);
+}
+
+.apf-sp-breadcrumb a {
+	color: var(--text-mid);
+	text-decoration: none;
+	transition: color .2s var(--ease);
+}
+
+.apf-sp-breadcrumb a:hover {
+	color: var(--navy);
+}
+
+.apf-sp-sep {
+	margin: 0 .4rem;
+	color: var(--text-muted);
+	opacity: .5;
+}
+
+.apf-sp-crumb-current {
+	color: var(--text);
+	font-weight: 500;
+}
+
+/* ---- Hero Grid ---- */
+
+.apf-sp-hero-grid {
+	display: grid;
+	grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+	gap: 3rem;
+	align-items: start;
+}
+
+/* ==========================================================================
+   Gallery
+   ========================================================================== */
+
+.apf-sp-gallery {
+	position: sticky;
+	top: 1.5rem;
+}
+
+.apf-sp-gallery-main {
+	position: relative;
+	border-radius: var(--radius);
+	overflow: hidden;
+	background: var(--bg-light);
+	border: 1px solid var(--border);
+}
+
+.apf-sp-viewport {
+	position: relative;
+	aspect-ratio: 1 / .78;
+	overflow: hidden;
+}
+
+.apf-sp-slide {
+	position: absolute;
+	inset: 0;
+	width: 100%;
+	height: 100%;
+	object-fit: contain;
+	padding: 1.25rem;
+	opacity: 0;
+	transition: opacity .35s var(--ease);
+	pointer-events: none;
+}
+
+.apf-sp-slide.active {
+	opacity: 1;
+	pointer-events: auto;
+}
+
+/* ---- Arrows ---- */
+
+.apf-sp-arrow {
+	position: absolute;
+	top: 50%;
+	z-index: 3;
+	transform: translateY(-50%);
+	width: 44px;
+	height: 44px;
+	border-radius: 50%;
+	border: none;
+	background: var(--navy);
+	color: #fff;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	cursor: pointer;
+	transition: background .2s var(--ease), transform .2s var(--ease);
+	box-shadow: 0 2px 8px rgba(28,58,138,.25);
+}
+
+.apf-sp-arrow:hover {
+	background: var(--navy-dark);
+	transform: translateY(-50%) scale(1.06);
+}
+
+.apf-sp-arrow-prev { left: 12px; }
+.apf-sp-arrow-next { right: 12px; }
+
+/* Hide arrows when single image */
+.apf-sp-gallery[data-count="0"] .apf-sp-arrow,
+.apf-sp-gallery[data-count="1"] .apf-sp-arrow {
+	display: none;
+}
+
+/* ---- Thumbnails ---- */
+
+.apf-sp-thumbs {
+	display: flex;
+	gap: .625rem;
+	margin-top: .875rem;
+	overflow-x: auto;
+	padding-bottom: 4px;
+	scrollbar-width: none;
+}
+
+.apf-sp-thumbs::-webkit-scrollbar { display: none; }
+
+.apf-sp-thumb {
+	flex-shrink: 0;
+	width: 72px;
+	height: 72px;
+	border: 2px solid var(--border);
+	border-radius: var(--radius-sm);
+	overflow: hidden;
+	cursor: pointer;
+	background: var(--bg-light);
+	padding: 0;
+	transition: border-color .2s var(--ease), box-shadow .2s var(--ease);
+}
+
+.apf-sp-thumb img {
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+	display: block;
+}
+
+.apf-sp-thumb:hover {
+	border-color: var(--navy);
+}
+
+.apf-sp-thumb.active {
+	border-color: var(--navy);
+	box-shadow: 0 0 0 2px rgba(28,58,138,.2);
+}
+
+/* ---- Empty gallery placeholder ---- */
+
+.apf-sp-gallery-empty {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	aspect-ratio: 1 / .78;
+	background: var(--bg-light);
+	border-radius: var(--radius);
+	border: 1px solid var(--border);
+}
+
+/* ==========================================================================
+   Product Info
+   ========================================================================== */
+
+.apf-sp-subtitle {
+	font-family: var(--body);
+	font-size: .8125rem;
+	font-weight: 700;
+	text-transform: uppercase;
+	letter-spacing: .08em;
+	color: var(--green);
+	margin: 0 0 .625rem;
+}
+
+.apf-sp-title {
+	font-family: var(--heading);
+	font-size: 2.125rem;
+	font-weight: 800;
+	line-height: 1.18;
+	color: var(--navy);
+	margin: 0 0 1rem;
+	letter-spacing: -.01em;
+}
+
+/* ---- Rating ---- */
+
+.apf-sp-rating {
+	display: flex;
+	align-items: center;
+	gap: .375rem;
+	margin-bottom: 1.5rem;
+}
+
+.apf-sp-stars { display: flex; gap: 1px; }
+
+.apf-sp-star {
+	font-size: 1.125rem;
+	line-height: 1;
+}
+
+.apf-sp-star--full  { color: var(--gold); }
+.apf-sp-star--half  { color: var(--gold); opacity: .5; }
+.apf-sp-star--empty { color: #d4d8dc; }
+
+.apf-sp-rating-num {
+	font-size: .875rem;
+	font-weight: 700;
+	color: var(--text);
+	margin-left: .125rem;
+}
+
+.apf-sp-review-count {
+	font-size: .8125rem;
+	color: var(--text-muted);
+}
+
+/* ---- Body content ---- */
+
+.apf-sp-body {
+	font-size: .9375rem;
+	line-height: 1.75;
+	color: var(--text-mid);
+	margin-bottom: 1.75rem;
+}
+
+.apf-sp-body p { margin: 0 0 1rem; }
+.apf-sp-body p:last-child { margin-bottom: 0; }
+
+/* ---- CTA Buttons ---- */
+
+.apf-sp-cta {
+	display: flex;
+	gap: 1rem;
+	margin-bottom: .5rem;
+}
+
+.apf-sp-btn {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	padding: .8125rem 2.25rem;
+	font-family: var(--heading);
+	font-size: .9375rem;
+	font-weight: 700;
+	text-decoration: none;
+	border-radius: 50px;
+	border: 2px solid transparent;
+	cursor: pointer;
+	transition: all .22s var(--ease);
+	white-space: nowrap;
+}
+
+.apf-sp-btn--green {
+	background: var(--green);
+	color: #fff;
+	border-color: var(--green);
+}
+
+.apf-sp-btn--green:hover {
+	background: var(--green-dark);
+	border-color: var(--green-dark);
+	color: #fff;
+	box-shadow: 0 4px 14px rgba(63,159,68,.3);
+}
+
+.apf-sp-btn--outline {
+	background: transparent;
+	color: var(--navy);
+	border-color: var(--navy);
+}
+
+.apf-sp-btn--outline:hover {
+	background: var(--navy);
+	color: #fff;
+	box-shadow: 0 4px 14px rgba(28,58,138,.2);
+}
+
+/* ==========================================================================
+   Tabs (full-width, below hero grid)
+   ========================================================================== */
+
+.apf-sp-tabs {
+	margin-top: 3rem;
+	border: 1px solid var(--border);
+	border-radius: var(--radius);
+	overflow: hidden;
+	background: var(--bg);
+}
+
+.apf-sp-tabs-nav {
+	display: flex;
+	border-bottom: 1px solid var(--border);
+	background: var(--bg-light);
+}
+
+.apf-sp-tabs-btn {
+	flex: 1;
+	padding: 1rem 1.5rem;
+	font-family: var(--heading);
+	font-size: .9375rem;
+	font-weight: 600;
+	color: var(--text-muted);
+	background: none;
+	border: none;
+	border-bottom: 3px solid transparent;
+	cursor: pointer;
+	transition: color .2s var(--ease), border-color .2s var(--ease), background .2s var(--ease);
+	white-space: nowrap;
+	text-align: center;
+}
+
+.apf-sp-tabs-btn:hover {
+	color: var(--navy);
+	background: rgba(28,58,138,.03);
+}
+
+.apf-sp-tabs-btn.active {
+	color: var(--navy);
+	border-bottom-color: var(--navy);
+	background: var(--bg);
+}
+
+.apf-sp-tabs-panel {
+	padding: 2rem 2.25rem;
+	font-size: .9375rem;
+	line-height: 1.75;
+	color: var(--text-mid);
+	display: none;
+}
+
+.apf-sp-tabs-panel.active {
+	display: block;
+}
+
+.apf-sp-tabs-panel p     { margin: 0 0 .875rem; }
+.apf-sp-tabs-panel strong { color: var(--text); font-weight: 700; }
+.apf-sp-tabs-panel ul     { margin: .5rem 0 1rem 1.25rem; padding: 0; }
+.apf-sp-tabs-panel li     { margin-bottom: .375rem; }
+
+.apf-sp-tabs-panel table {
+	width: 100%;
+	border-collapse: collapse;
+	margin: 1rem 0;
+}
+
+.apf-sp-tabs-panel th,
+.apf-sp-tabs-panel td {
+	padding: .625rem 1rem;
+	border: 1px solid var(--border);
+	text-align: left;
+}
+
+.apf-sp-tabs-panel th {
+	background: var(--bg-light);
+	font-weight: 600;
+	color: var(--text);
+}
+
+/* ==========================================================================
+   SECTION 2 — WHY CHOOSE
+   ========================================================================== */
+
+.apf-sp-why {
+	padding: 4.5rem 0;
+	background: var(--bg-warm);
+}
+
+/* ---- Section Headings (shared) ---- */
+
+.apf-sp-sec-title {
+	font-family: var(--heading);
+	font-size: 1.625rem;
+	font-weight: 700;
+	color: var(--text);
+	text-align: center;
+	margin: 0 0 .625rem;
+	letter-spacing: -.01em;
+}
+
+.apf-sp-sec-sub {
+	font-size: .9375rem;
+	color: var(--text-muted);
+	text-align: center;
+	max-width: 620px;
+	margin: 0 auto 3rem;
+	line-height: 1.6;
+}
+
+/* ---- Feature Cards ---- */
+
+.apf-sp-features {
+	display: grid;
+	grid-template-columns: repeat(4, 1fr);
+	gap: 1.25rem;
+}
+
+.apf-sp-fcard {
+	background: var(--bg);
+	border: 1px solid var(--border);
+	border-radius: var(--radius);
+	padding: 1.75rem 1.5rem 1.5rem;
+	transition: transform .25s var(--ease), box-shadow .25s var(--ease);
+}
+
+.apf-sp-fcard:hover {
+	transform: translateY(-4px);
+	box-shadow: var(--shadow-lg);
+}
+
+.apf-sp-fcard-icon {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 56px;
+	height: 56px;
+	border-radius: 50%;
+	background: var(--green);
+	color: #fff;
+	margin-bottom: 1.125rem;
+}
+
+.apf-sp-fcard-title {
+	font-family: var(--heading);
+	font-size: .9375rem;
+	font-weight: 700;
+	color: var(--text);
+	margin: 0 0 .5rem;
+	line-height: 1.35;
+}
+
+.apf-sp-fcard-desc {
+	font-size: .8125rem;
+	line-height: 1.6;
+	color: var(--text-muted);
+	margin: 0 0 .75rem;
+}
+
+.apf-sp-fcard-list {
+	list-style: none;
+	padding: 0;
+	margin: 0;
+}
+
+.apf-sp-fcard-list li {
+	position: relative;
+	padding-left: 1rem;
+	font-size: .8125rem;
+	color: var(--text-mid);
+	line-height: 1.5;
+	margin-bottom: .375rem;
+}
+
+.apf-sp-fcard-list li::before {
+	content: '';
+	position: absolute;
+	left: 0;
+	top: .5em;
+	width: 5px;
+	height: 5px;
+	border-radius: 50%;
+	background: var(--green);
+}
+
+/* ==========================================================================
+   SECTION 3 — REAL RESULTS / CASE STUDIES
+   ========================================================================== */
+
+.apf-sp-results {
+	padding: 4.5rem 0 5rem;
+	background: var(--bg);
+}
+
+.apf-sp-cases {
+	display: grid;
+	grid-template-columns: repeat(4, 1fr);
+	gap: 1.25rem;
+}
+
+/* ---- Case Study Card ---- */
+
+.apf-sp-case {
+	display: flex;
+	flex-direction: column;
+	border: 1px solid var(--border);
+	border-radius: var(--radius);
+	overflow: hidden;
+	background: var(--bg);
+	text-decoration: none;
+	color: inherit;
+	transition: transform .25s var(--ease), box-shadow .25s var(--ease);
+}
+
+.apf-sp-case:hover {
+	transform: translateY(-4px);
+	box-shadow: var(--shadow-lg);
+}
+
+/* ---- Case Image ---- */
+
+.apf-sp-case-img {
+	position: relative;
+	aspect-ratio: 4 / 3;
+	overflow: hidden;
+	margin: .75rem;
+	border-radius: var(--radius-sm);
+	border: 3px solid var(--green);
+}
+
+.apf-sp-case-img img {
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+	display: block;
+	transition: transform .4s var(--ease);
+}
+
+.apf-sp-case:hover .apf-sp-case-img img {
+	transform: scale(1.05);
+}
+
+.apf-sp-case-placeholder {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 100%;
+	height: 100%;
+	background: var(--bg-light);
+	color: var(--border);
+}
+
+/* ---- Case Body ---- */
+
+.apf-sp-case-body {
+	padding: .75rem 1rem 1.25rem;
+	flex: 1;
+	display: flex;
+	flex-direction: column;
+}
+
+.apf-sp-case-header {
+	display: flex;
+	align-items: flex-start;
+	justify-content: space-between;
+	gap: .5rem;
+	margin-bottom: .5rem;
+}
+
+.apf-sp-case-title {
+	font-family: var(--heading);
+	font-size: .9375rem;
+	font-weight: 700;
+	line-height: 1.35;
+	color: var(--text);
+	margin: 0;
+}
+
+.apf-sp-case-arrow {
+	flex-shrink: 0;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 30px;
+	height: 30px;
+	border-radius: 50%;
+	background: var(--green);
+	color: #fff;
+	margin-top: 2px;
+	transition: background .2s var(--ease), transform .2s var(--ease);
+}
+
+.apf-sp-case:hover .apf-sp-case-arrow {
+	background: var(--green-dark);
+	transform: translateX(2px);
+}
+
+.apf-sp-case-desc {
+	font-size: .8125rem;
+	line-height: 1.6;
+	color: var(--text-muted);
+	margin: 0;
+}
+
+/* ==========================================================================
+   RESPONSIVE — Tablet landscape (≤1080px)
+   ========================================================================== */
+
+@media (max-width: 1080px) {
+	.apf-sp-hero-grid {
+		gap: 2rem;
+	}
+
+	.apf-sp-title {
+		font-size: 1.75rem;
+	}
+
+	.apf-sp-features {
+		grid-template-columns: repeat(2, 1fr);
+	}
+
+	.apf-sp-cases {
+		grid-template-columns: repeat(2, 1fr);
+	}
+}
+
+/* ==========================================================================
+   RESPONSIVE — Tablet portrait (≤768px)
+   ========================================================================== */
+
+@media (max-width: 768px) {
+	.apf-sp-container {
+		padding: 0 1.25rem;
+	}
+
+	.apf-sp-hero {
+		padding: .75rem 0 2.5rem;
+	}
+
+	/* Stack hero columns */
+	.apf-sp-hero-grid {
+		grid-template-columns: 1fr;
+		gap: 1.75rem;
+	}
+
+	.apf-sp-gallery {
+		position: static;
+	}
+
+	.apf-sp-arrow {
+		width: 38px;
+		height: 38px;
+	}
+
+	.apf-sp-arrow-prev { left: 8px; }
+	.apf-sp-arrow-next { right: 8px; }
+
+	.apf-sp-title {
+		font-size: 1.5rem;
+	}
+
+	.apf-sp-body {
+		font-size: .875rem;
+	}
+
+	/* Stack CTA buttons */
+	.apf-sp-cta {
+		flex-direction: column;
+	}
+
+	.apf-sp-btn {
+		width: 100%;
+		text-align: center;
+		justify-content: center;
+	}
+
+	/* Tabs: horizontal scroll */
+	.apf-sp-tabs {
+		margin-top: 2rem;
+	}
+
+	.apf-sp-tabs-nav {
+		overflow-x: auto;
+		scrollbar-width: none;
+		-webkit-overflow-scrolling: touch;
+	}
+
+	.apf-sp-tabs-nav::-webkit-scrollbar { display: none; }
+
+	.apf-sp-tabs-btn {
+		flex: 0 0 auto;
+		padding: .875rem 1.25rem;
+		font-size: .8125rem;
+	}
+
+	.apf-sp-tabs-panel {
+		padding: 1.5rem;
+	}
+
+	/* Why Choose */
+	.apf-sp-why,
+	.apf-sp-results {
+		padding: 3rem 0;
+	}
+
+	.apf-sp-sec-title {
+		font-size: 1.375rem;
+	}
+
+	.apf-sp-sec-sub {
+		font-size: .875rem;
+		margin-bottom: 2rem;
+	}
+
+	.apf-sp-features {
+		grid-template-columns: 1fr 1fr;
+		gap: 1rem;
+	}
+
+	.apf-sp-fcard {
+		padding: 1.25rem 1rem 1rem;
+	}
+
+	.apf-sp-fcard-icon {
+		width: 48px;
+		height: 48px;
+	}
+
+	.apf-sp-fcard-icon svg {
+		width: 22px;
+		height: 22px;
+	}
+
+	/* Cases */
+	.apf-sp-cases {
+		grid-template-columns: 1fr 1fr;
+		gap: 1rem;
+	}
+}
+
+/* ==========================================================================
+   RESPONSIVE — Mobile (≤540px)
+   ========================================================================== */
+
+@media (max-width: 540px) {
+	.apf-sp-container {
+		padding: 0 1rem;
+	}
+
+	.apf-sp-breadcrumb {
+		font-size: .75rem;
+		margin-bottom: 1rem;
+	}
+
+	.apf-sp-viewport {
+		aspect-ratio: 4 / 3;
+	}
+
+	.apf-sp-thumb {
+		width: 56px;
+		height: 56px;
+	}
+
+	.apf-sp-title {
+		font-size: 1.3125rem;
+	}
+
+	.apf-sp-subtitle {
+		font-size: .75rem;
+	}
+
+	.apf-sp-btn {
+		font-size: .875rem;
+		padding: .75rem 1.5rem;
+	}
+
+	/* Tabs */
+	.apf-sp-tabs-btn {
+		font-size: .8125rem;
+		padding: .75rem 1rem;
+	}
+
+	.apf-sp-tabs-panel {
+		padding: 1.25rem 1rem;
+		font-size: .875rem;
+	}
+
+	/* Feature cards: single column */
+	.apf-sp-features {
+		grid-template-columns: 1fr;
+	}
+
+	.apf-sp-fcard {
+		padding: 1.5rem 1.25rem;
+	}
+
+	/* Case studies: single column */
+	.apf-sp-cases {
+		grid-template-columns: 1fr;
+	}
+
+	.apf-sp-case-img {
+		aspect-ratio: 16 / 10;
+	}
+
+	.apf-sp-sec-title {
+		font-size: 1.25rem;
+	}
+}

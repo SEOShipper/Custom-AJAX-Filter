@@ -4,79 +4,102 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-This repository contains the **Exopite Multifilter** WordPress plugin - an AJAX-based filtering and sorting system for WordPress posts and custom post types. The plugin is located in `docs/Exopite-Multifilter-Multi-Sorter-WordPress-Plugin-master/exopite-multifilter/`.
+**AJAX Product Filter** (v2.0.0) — a WordPress plugin that registers a `product` Custom Post Type with AJAX-based filtering, custom taxonomies, meta fields, and a single product page template.
 
 ## Architecture
 
 ### Directory Structure
 ```
-exopite-multifilter/
-├── exopite-multifilter.php    # Main plugin bootstrap file
+ajax-product-filter/
+├── ajax-product-filter.php          # Main bootstrap (singleton, hooks, asset enqueueing)
 ├── includes/
-│   ├── class-exopite-multifilter.php        # Core plugin class
-│   ├── class-exopite-multifilter-loader.php # Hook/action/filter loader
-│   └── class-exopite-multifilter-i18n.php   # Internationalization
-├── public/
-│   ├── class-exopite-multifilter-public.php # Frontend functionality, shortcode, AJAX handlers
-│   ├── js/                                   # JavaScript files (*.dev.js and *.min.js)
-│   └── css/                                  # Stylesheets (*.dev.css and *.min.css)
-├── admin/
-│   └── class-exopite-multifilter-admin.php  # Admin hooks (minimal)
-└── vendor/
-    └── plugin-update-checker/               # Auto-update system
+│   ├── class-post-type.php          # CPT registration ('product')
+│   ├── class-taxonomies.php         # Taxonomy registration (product_type, product_label, product_brand, etc.)
+│   ├── class-meta-fields.php        # Meta boxes: specs, gallery, tabs
+│   ├── class-shortcodes.php         # [product_filters] and [product_grid] shortcodes
+│   └── class-ajax-handler.php       # AJAX endpoint for filtering
+├── templates/
+│   ├── single-product.php           # Single product page (3 sections: hero, why choose, results)
+│   ├── filter-sidebar.php           # Filter sidebar template
+│   ├── product-grid.php             # Product grid wrapper template
+│   └── product-card.php             # Individual product card template
+├── assets/
+│   ├── css/
+│   │   ├── filter.css               # Filter/grid frontend styles
+│   │   ├── single-product.css       # Single product page styles
+│   │   └── meta-box.css             # Admin meta box styles
+│   ├── js/
+│   │   ├── filter.js                # AJAX filter frontend logic
+│   │   ├── single-product.js        # Gallery nav + tab switching
+│   │   └── meta-box.js              # Admin gallery picker + tabs repeater
+│   └── images/                      # Placeholder directory
 ```
 
-### Key Entry Points
-- **Bootstrap**: `exopite-multifilter.php` - Initializes constants, includes the core class, runs the plugin
-- **Core Logic**: `includes/class-exopite-multifilter.php` - Loads dependencies, defines hooks
-- **Frontend**: `public/class-exopite-multifilter-public.php` - Handles shortcode rendering, AJAX filtering, pagination
-- **JavaScript**: `public/js/exopite-multifilter-public.dev.js` - jQuery plugin for AJAX interactions
+### Key Classes (all singletons)
+- **Ajax_Product_Filter** — Main orchestrator, loads dependencies, registers hooks
+- **APF_Post_Type** — Registers `product` CPT (priority 0, WooCommerce conflict guard)
+- **APF_Taxonomies** — Registers 6 taxonomies against `product` CPT
+- **APF_Meta_Fields** — 3 meta boxes: specs (text fields), gallery (media picker), tabs (JSON repeater)
+- **APF_Shortcodes** — `[product_filters]` and `[product_grid]` shortcodes
+- **APF_Ajax_Handler** — `wp_ajax_apf_filter_products` endpoint with term count caching
 
-### Plugin Pattern
-Uses WordPress standard hook-based architecture with a Loader class that manages actions, filters, and shortcodes. The main class orchestrates initialization through `load_dependencies()`, `set_locale()`, `define_admin_hooks()`, and `define_public_hooks()` methods.
+### Post Type & Taxonomies
+- **CPT**: `product` (has_archive, show_in_rest, dashicons-cart)
+- **Taxonomies** (registered to `product`):
+  - `product_type` — Product category (private, not in filters)
+  - `product_label` — Display label for cards (private)
+  - `product_brand` — Replace brand (public, filterable)
+  - `product_application` — Application type (public, filterable)
+  - `product_flow_rate` — Flow rate range (public, filterable)
+  - `product_micron` — Micron filtering range (public, filterable)
 
-### JavaScript Architecture
-- `exopite-core.dev.js` - Utility functions (debounce, throttle, viewport detection, URL manipulation) and WP-JS-Hooks event system
-- `exopite-multifilter-public.dev.js` - jQuery plugin `$.fn.exopiteMultifilter()` handling filter selection, AJAX loading, pagination, search
+### Meta Fields
+- `_product_subtitle` — Subtitle text
+- `_product_flow_rate`, `_product_micron`, `_product_temp` — Spec values
+- `_product_rating` — Numeric rating (0-5)
+- `_product_description` — Card description text
+- `_product_gallery` — Comma-separated attachment IDs
+- `_product_tabs` — JSON array of `{title, content}` objects
+
+### Single Product Template
+Three sections with filter hooks for customization:
+1. **Hero** — Breadcrumb, gallery (main+thumbs+arrows), product info, rating, content, action buttons, dynamic tabs
+2. **Why Choose** — Static features grid (`apf_why_choose_title`, `apf_why_choose_subtitle` filters)
+3. **Real Results** — Stats cards (`apf_results_title`, `apf_results_subtitle` filters)
+
+Template override: theme can provide `single-product.php` to override plugin template.
 
 ## Development
 
 ### Build System
-No build tools configured. Files are maintained as paired development (`*.dev.js`/`*.dev.css`) and minified (`*.min.js`/`*.min.css`) versions. Scripts are versioned automatically based on file modification time.
+No build tools. Single source files. Assets versioned via `APF_VERSION` constant.
 
-### Development Mode
-Toggle in `public/class-exopite-multifilter-public.php` line 82: `$this->development = false` - when true, loads `.dev` files; when false, loads `.min` files.
+### Asset Loading
+- **Filter pages**: CSS/JS loaded conditionally when `[product_filters]` or `[product_grid]` shortcodes detected
+- **Single product**: `single-product.css` + `single-product.js` loaded on `is_singular('product')`
+- **Admin**: `meta-box.css` + `meta-box.js` loaded on product edit screens only
 
 ### Requirements
 - WordPress 4.7+
 - PHP 5.3+
 - jQuery 1.9.1+
 
-## Plugin Configuration
+## Shortcode Reference
 
-All configuration is via shortcode parameters (60+ options). No admin UI. Primary shortcode: `[exopite-multifilter]`
+### `[product_filters]`
+| Param | Default | Description |
+|-------|---------|-------------|
+| `show_search` | `true` | Show search input |
+| `show_count` | `false` | Show term counts |
+| `collapsed` | `false` | Start filter groups collapsed |
 
-### Key Shortcode Parameters
-- `post_type` - Post type slug
-- `posts_per_page`, `posts_per_row` - Layout control
-- `pagination` - 'pagination', 'readmore', 'infinite', or 'none'
-- `style` - 'masonry', 'equal-height', 'carousel', 'timeline', or empty
-- `include_taxonomies` - Taxonomies to display as filters
-- `effect` - Hover effects: 'apollo', 'duke', 'goliath', 'julia', 'lexi', 'ming', 'steve'
-
-## WordPress Hooks for Customization
-
-PHP filters available:
-- `exopite-multifilter-thumbnail-*` - Customize thumbnail URLs and links
-- `exopite-multifilter-article-*` - Customize article rendering
-- `exopite-multifilter-filter-taxonomy-name` - Customize filter taxonomy display
-
-JavaScript hooks (via WP-JS-Hooks):
-- `ema-before-send` - Before AJAX request
-- `ema-success-animation-end` - After animation completion
-
-## Known Issues
-
-- Masonry-desandro layout has issues with lazy loading
-- Mobile pagination displays 6 page numbers which may be too many
-- `get_articles` and `exopite_multifilter_shortcode` functions are large and could be refactored
+### `[product_grid]`
+| Param | Default | Description |
+|-------|---------|-------------|
+| `columns` | `3` | Grid columns (1-4) |
+| `quote_url` | `/contact/` | Quote button URL |
+| `title` | empty | Grid heading |
+| `product_type` | empty | Pre-filter by product_type slug |
+| `product_application` | empty | Pre-filter by application slug |
+| `limit` | empty | Max products (hides sort/count when set) |
+| `show_description` | `false` | Show description instead of specs |
