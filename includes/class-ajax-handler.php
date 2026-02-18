@@ -62,17 +62,26 @@ class APF_Ajax_Handler {
 			);
 		}
 
-		// Filter by product_application if specified (from shortcode attribute)
+		// Filter by product_application if specified (from shortcode attribute or user filter)
 		if ( ! empty( $_POST['product_application'] ) ) {
+			if ( is_array( $_POST['product_application'] ) ) {
+				$app_terms = array_map( 'sanitize_text_field', $_POST['product_application'] );
+			} else {
+				$app_terms = sanitize_text_field( $_POST['product_application'] );
+			}
 			$tax_query[] = array(
 				'taxonomy' => 'product_application',
 				'field'    => 'slug',
-				'terms'    => sanitize_text_field( $_POST['product_application'] ),
+				'terms'    => $app_terms,
+				'operator' => 'IN',
 			);
 		}
 
-		// Add filter taxonomies
+		// Add filter taxonomies (skip product_application — already handled above)
 		foreach ( $this->filter_taxonomies as $taxonomy ) {
+			if ( 'product_application' === $taxonomy ) {
+				continue;
+			}
 			if ( ! empty( $_POST[ $taxonomy ] ) && is_array( $_POST[ $taxonomy ] ) ) {
 				$terms       = array_map( 'sanitize_text_field', $_POST[ $taxonomy ] );
 				$tax_query[] = array(
@@ -199,10 +208,16 @@ class APF_Ajax_Handler {
 
 				// Add product_application pre-filter if specified
 				if ( ! empty( $filters['product_application'] ) ) {
+					if ( is_array( $filters['product_application'] ) ) {
+						$app_terms = array_map( 'sanitize_text_field', $filters['product_application'] );
+					} else {
+						$app_terms = sanitize_text_field( $filters['product_application'] );
+					}
 					$tax_query[] = array(
 						'taxonomy' => 'product_application',
 						'field'    => 'slug',
-						'terms'    => sanitize_text_field( $filters['product_application'] ),
+						'terms'    => $app_terms,
+						'operator' => 'IN',
 					);
 				}
 
@@ -213,8 +228,11 @@ class APF_Ajax_Handler {
 					'terms'    => $term->slug,
 				);
 
-				// Add other active filters
+				// Add other active filters (skip product_application — already handled above)
 				foreach ( $this->filter_taxonomies as $other_tax ) {
+					if ( 'product_application' === $other_tax ) {
+						continue;
+					}
 					if ( $other_tax !== $taxonomy && ! empty( $filters[ $other_tax ] ) && is_array( $filters[ $other_tax ] ) ) {
 						$other_terms = array_map( 'sanitize_text_field', $filters[ $other_tax ] );
 						$tax_query[] = array(
