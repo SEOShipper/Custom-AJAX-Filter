@@ -31,9 +31,14 @@ if (!$thumbnail_url) {
     $thumbnail_url = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="400" height="300" viewBox="0 0 400 300"%3E%3Crect fill="%23f0f0f0" width="400" height="300"/%3E%3Ctext x="50%25" y="50%25" font-family="sans-serif" font-size="16" fill="%239ca3af" text-anchor="middle" dy=".3em"%3ENo Image%3C/text%3E%3C/svg%3E';
 }
 
-// Quote URL (from grid wrapper or default)
-$quote_url = isset($quote_url) ? $quote_url : '/contact/';
-$quote_url_with_product = add_query_arg('product', urlencode(get_the_title()), $quote_url);
+// Quote URL — use Elementor popup if configured, otherwise link to contact page
+$popup_url = APF_Settings::get_popup_url();
+if ( $popup_url ) {
+    $quote_url_with_product = $popup_url;
+} else {
+    $quote_url = isset($quote_url) ? $quote_url : '/contact/';
+    $quote_url_with_product = add_query_arg('product', urlencode(get_the_title()), $quote_url);
+}
 ?>
 
 <article class="apf-product-card" data-id="<?php echo esc_attr($post_id); ?>">
