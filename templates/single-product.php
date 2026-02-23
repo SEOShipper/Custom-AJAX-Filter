@@ -75,8 +75,9 @@ while ( have_posts() ) :
 	$rating_val   = $rating ? floatval( $rating ) : 0;
 	$review_count = apply_filters( 'apf_product_review_count', '', $post_id );
 
-	// Quote URL
-	$quote_url = add_query_arg( 'product', rawurlencode( get_the_title() ), '/contact/' );
+	// Quote URL — use Elementor popup if configured, otherwise link to contact page
+	$popup_url = APF_Settings::get_popup_url();
+	$quote_url = $popup_url ? $popup_url : add_query_arg( 'product', rawurlencode( get_the_title() ), '/contact/' );
 ?>
 
 <div class="apf-sp">

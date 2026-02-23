@@ -17,7 +17,8 @@ ajax-product-filter/
 │   ├── class-taxonomies.php         # Taxonomy registration (product_type, product_label, product_brand, etc.)
 │   ├── class-meta-fields.php        # Meta boxes: specs, gallery, tabs
 │   ├── class-shortcodes.php         # [product_filters] and [product_grid] shortcodes
-│   └── class-ajax-handler.php       # AJAX endpoint for filtering
+│   ├── class-ajax-handler.php       # AJAX endpoint for filtering
+│   └── class-settings.php           # Settings page (Settings > Product Filter)
 ├── templates/
 │   ├── single-product.php           # Single product page (3 sections: hero, why choose, results)
 │   ├── filter-sidebar.php           # Filter sidebar template
@@ -42,6 +43,7 @@ ajax-product-filter/
 - **APF_Meta_Fields** — 3 meta boxes: specs (text fields), gallery (media picker), tabs (JSON repeater)
 - **APF_Shortcodes** — `[product_filters]` and `[product_grid]` shortcodes
 - **APF_Ajax_Handler** — `wp_ajax_apf_filter_products` endpoint with term count caching
+- **APF_Settings** — Admin settings page (Settings > Product Filter); stores `apf_quote_popup_id`
 
 ### Post Type & Taxonomies
 - **CPT**: `product` (has_archive, show_in_rest, dashicons-cart)
@@ -79,10 +81,14 @@ No build tools. Single source files. Assets versioned via `APF_VERSION` constant
 - **Single product**: `single-product.css` + `single-product.js` loaded on `is_singular('product')`
 - **Admin**: `meta-box.css` + `meta-box.js` loaded on product edit screens only
 
+### Settings (Settings > Product Filter)
+- `apf_quote_popup_id` — Elementor popup post ID for the "Get Quote" button. When set, all "Get Quote" buttons (single product page + product cards) open the Elementor popup instead of linking to `/contact/`. When empty, the default contact-page link is used.
+
 ### Requirements
 - WordPress 4.7+
 - PHP 5.3+
 - jQuery 1.9.1+
+- Elementor Pro (optional, for popup integration)
 
 ## Shortcode Reference
 

@@ -60,6 +60,7 @@ class Ajax_Product_Filter {
 		require_once APF_PLUGIN_DIR . 'includes/class-meta-fields.php';
 		require_once APF_PLUGIN_DIR . 'includes/class-shortcodes.php';
 		require_once APF_PLUGIN_DIR . 'includes/class-ajax-handler.php';
+		require_once APF_PLUGIN_DIR . 'includes/class-settings.php';
 	}
 
 	/**
@@ -72,6 +73,7 @@ class Ajax_Product_Filter {
 		APF_Meta_Fields::get_instance();
 		APF_Shortcodes::get_instance();
 		APF_Ajax_Handler::get_instance();
+		APF_Settings::get_instance();
 
 		// Enqueue assets
 		add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_assets' ) );
