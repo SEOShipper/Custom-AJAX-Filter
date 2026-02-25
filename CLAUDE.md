@@ -18,7 +18,7 @@ ajax-product-filter/
 │   ├── class-meta-fields.php        # Meta boxes: specs, gallery, tabs
 │   ├── class-shortcodes.php         # [product_filters] and [product_grid] shortcodes
 │   ├── class-ajax-handler.php       # AJAX endpoint for filtering
-│   └── class-settings.php           # Settings page (Settings > Product Filter)
+│   └── class-settings.php           # Settings page (Products > Settings)
 ├── templates/
 │   ├── single-product.php           # Single product page (3 sections: hero, why choose, results)
 │   ├── filter-sidebar.php           # Filter sidebar template
@@ -32,7 +32,7 @@ ajax-product-filter/
 │   ├── js/
 │   │   ├── filter.js                # AJAX filter frontend logic
 │   │   ├── single-product.js        # Gallery nav + tab switching
-│   │   └── meta-box.js              # Admin gallery picker + tabs repeater
+│   │   └── meta-box.js              # Admin gallery picker + tabs WYSIWYG repeater
 │   └── images/                      # Placeholder directory
 ```
 
@@ -40,10 +40,10 @@ ajax-product-filter/
 - **Ajax_Product_Filter** — Main orchestrator, loads dependencies, registers hooks
 - **APF_Post_Type** — Registers `product` CPT (priority 0, WooCommerce conflict guard)
 - **APF_Taxonomies** — Registers 6 taxonomies against `product` CPT
-- **APF_Meta_Fields** — 3 meta boxes: specs (text fields), gallery (media picker), tabs (JSON repeater)
+- **APF_Meta_Fields** — 3 meta boxes: specs (text fields), gallery (media picker), tabs (WYSIWYG repeater)
 - **APF_Shortcodes** — `[product_filters]` and `[product_grid]` shortcodes
 - **APF_Ajax_Handler** — `wp_ajax_apf_filter_products` endpoint with term count caching
-- **APF_Settings** — Admin settings page (Settings > Product Filter); stores `apf_quote_popup_id`
+- **APF_Settings** — Admin settings page (Products > Settings); stores `apf_quote_popup_id`, `apf_why_choose_template_id`, `apf_case_studies_template_id`
 
 ### Post Type & Taxonomies
 - **CPT**: `product` (has_archive, show_in_rest, dashicons-cart)
@@ -58,16 +58,16 @@ ajax-product-filter/
 ### Meta Fields
 - `_product_subtitle` — Subtitle text
 - `_product_flow_rate`, `_product_micron`, `_product_temp` — Spec values
-- `_product_rating` — Numeric rating (0-5)
 - `_product_description` — Card description text
 - `_product_gallery` — Comma-separated attachment IDs
-- `_product_tabs` — JSON array of `{title, content}` objects
+- `_product_tabs` — JSON array of `{title, content}` objects (content edited via TinyMCE WYSIWYG)
 
 ### Single Product Template
-Three sections with filter hooks for customization:
-1. **Hero** — Breadcrumb, gallery (main+thumbs+arrows), product info, rating, content, action buttons, dynamic tabs
-2. **Why Choose** — Static features grid (`apf_why_choose_title`, `apf_why_choose_subtitle` filters)
-3. **Real Results** — Stats cards (`apf_results_title`, `apf_results_subtitle` filters)
+Top sections always plugin-rendered; bottom sections conditionally replaced by an Elementor template:
+1. **Breadcrumb + Hero** — Breadcrumb bar, gallery (main+thumbs+arrows), product info, content, action buttons
+2. **Tabs** — Full-width tabbed content from `_product_tabs` meta
+3. **Why Choose** — If `apf_why_choose_template_id` is set, renders that Elementor template. Otherwise falls back to default features grid (`apf_why_choose_title`, `apf_why_choose_subtitle` filters)
+4. **Case Studies** — If `apf_case_studies_template_id` is set, renders that Elementor template. Otherwise falls back to default stats cards (`apf_results_title`, `apf_results_subtitle` filters)
 
 Template override: theme can provide `single-product.php` to override plugin template.
 
@@ -81,14 +81,16 @@ No build tools. Single source files. Assets versioned via `APF_VERSION` constant
 - **Single product**: `single-product.css` + `single-product.js` loaded on `is_singular('product')`
 - **Admin**: `meta-box.css` + `meta-box.js` loaded on product edit screens only
 
-### Settings (Settings > Product Filter)
+### Settings (Products > Settings)
 - `apf_quote_popup_id` — Elementor popup post ID for the "Get Quote" button. When set, all "Get Quote" buttons (single product page + product cards) open the Elementor popup instead of linking to `/contact/`. When empty, the default contact-page link is used.
+- `apf_why_choose_template_id` — Elementor template ID for the "Why Choose" section. When set, replaces the default features grid. When empty, the default PHP layout is used.
+- `apf_case_studies_template_id` — Elementor template ID for the "Case Studies" section. When set, replaces the default case study cards. When empty, the default PHP layout is used.
 
 ### Requirements
 - WordPress 4.7+
 - PHP 5.3+
 - jQuery 1.9.1+
-- Elementor Pro (optional, for popup integration)
+- Elementor Pro (optional, for popup integration and single product bottom template)
 
 ## Shortcode Reference
 

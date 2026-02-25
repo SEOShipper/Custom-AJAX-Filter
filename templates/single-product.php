@@ -21,7 +21,6 @@ while ( have_posts() ) :
 
 	$post_id  = get_the_ID();
 	$subtitle = get_post_meta( $post_id, '_product_subtitle', true );
-	$rating   = get_post_meta( $post_id, '_product_rating', true );
 
 	// Gallery
 	$gallery_ids = get_post_meta( $post_id, '_product_gallery', true );
@@ -72,10 +71,6 @@ while ( have_posts() ) :
 			$type_link = '';
 		}
 	}
-
-	// Rating display
-	$rating_val   = $rating ? floatval( $rating ) : 0;
-	$review_count = apply_filters( 'apf_product_review_count', '', $post_id );
 
 	// Quote URL — use Elementor popup if configured, otherwise link to contact page
 	$popup_url = APF_Settings::get_popup_url();
@@ -176,28 +171,6 @@ while ( have_posts() ) :
 
 				<h1 class="apf-sp-title"><?php the_title(); ?></h1>
 
-				<?php if ( $rating_val > 0 ) : ?>
-				<div class="apf-sp-rating">
-					<div class="apf-sp-stars" aria-label="<?php echo esc_attr( sprintf( 'Rating: %s out of 5', $rating ) ); ?>">
-						<?php for ( $s = 1; $s <= 5; $s++ ) :
-							if ( $s <= floor( $rating_val ) ) :
-								$cls = 'full';
-							elseif ( $s - 0.5 <= $rating_val ) :
-								$cls = 'half';
-							else :
-								$cls = 'empty';
-							endif;
-						?>
-						<span class="apf-sp-star apf-sp-star--<?php echo esc_attr( $cls ); ?>">&#9733;</span>
-						<?php endfor; ?>
-					</div>
-					<span class="apf-sp-rating-num"><?php echo esc_html( $rating ); ?></span>
-					<?php if ( $review_count ) : ?>
-					<span class="apf-sp-review-count">(<?php echo esc_html( $review_count ); ?> Reviews)</span>
-					<?php endif; ?>
-				</div>
-				<?php endif; ?>
-
 				<div class="apf-sp-body">
 					<?php the_content(); ?>
 				</div>
@@ -253,6 +226,10 @@ while ( have_posts() ) :
      SECTION 2: WHY CHOOSE
      ================================================================ -->
 <?php
+$apf_why_tpl = APF_Settings::get_why_choose_template_id();
+if ( $apf_why_tpl && class_exists( '\Elementor\Plugin' ) ) :
+	echo \Elementor\Plugin::instance()->frontend->get_builder_content_for_display( intval( $apf_why_tpl ) );
+else :
 $why_title    = apply_filters( 'apf_why_choose_title', 'Why Choose Pullner Filter?' );
 $why_subtitle = apply_filters( 'apf_why_choose_subtitle', 'More than just a supplier - we\'re your technical partner in filtration solutions' );
 $why_features = apply_filters( 'apf_why_choose_features', array(
@@ -307,11 +284,16 @@ $why_features = apply_filters( 'apf_why_choose_features', array(
 		</div>
 	</div>
 </section>
+<?php endif; ?>
 
 <!-- ================================================================
      SECTION 3: REAL RESULTS / CASE STUDIES
      ================================================================ -->
 <?php
+$apf_cases_tpl = APF_Settings::get_case_studies_template_id();
+if ( $apf_cases_tpl && class_exists( '\Elementor\Plugin' ) ) :
+	echo \Elementor\Plugin::instance()->frontend->get_builder_content_for_display( intval( $apf_cases_tpl ) );
+else :
 $results_title    = apply_filters( 'apf_results_title', 'Real Results with Pullner High Flow Filters: Case Studies' );
 $results_subtitle = apply_filters( 'apf_results_subtitle', 'See how our high-capacity cartridges help global clients cut costs, boost flow rates, and improve filtration performance across industries.' );
 
@@ -375,6 +357,7 @@ $case_studies = apply_filters( 'apf_case_studies', array(
 		</div>
 	</div>
 </section>
+<?php endif; ?>
 
 </div><!-- .apf-sp -->
 

@@ -113,6 +113,10 @@
 	margin-top: 6px;
 }
 
-.apf-tab-content {
+.apf-tab-content-wrap .wp-editor-wrap {
+	width: 100%;
+}
+
+.apf-tab-content-wrap .wp-editor-area {
 	width: 100%;
 }

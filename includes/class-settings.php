@@ -2,7 +2,7 @@
 /**
  * Plugin settings page
  *
- * Registers a Settings > Product Filter page with the WordPress Settings API.
+ * Registers a Products > Settings page with the WordPress Settings API.
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -15,6 +15,12 @@ class APF_Settings {
 
 	/** WordPress option key for the Elementor popup ID */
 	const OPTION_POPUP_ID = 'apf_quote_popup_id';
+
+	/** WordPress option key for the Why Choose Elementor template */
+	const OPTION_WHY_CHOOSE_TPL = 'apf_why_choose_template_id';
+
+	/** WordPress option key for the Case Studies Elementor template */
+	const OPTION_CASE_STUDIES_TPL = 'apf_case_studies_template_id';
 
 	public static function get_instance() {
 		if ( null === self::$instance ) {
@@ -29,9 +35,10 @@ class APF_Settings {
 	}
 
 	public function add_settings_page() {
-		add_options_page(
+		add_submenu_page(
+			'edit.php?post_type=product',
 			'Product Filter Settings',
-			'Product Filter',
+			'Settings',
 			'manage_options',
 			'apf-settings',
 			array( $this, 'render_settings_page' )
@@ -40,6 +47,18 @@ class APF_Settings {
 
 	public function register_settings() {
 		register_setting( 'apf_settings_group', self::OPTION_POPUP_ID, array(
+			'type'              => 'string',
+			'sanitize_callback' => 'sanitize_text_field',
+			'default'           => '',
+		) );
+
+		register_setting( 'apf_settings_group', self::OPTION_WHY_CHOOSE_TPL, array(
+			'type'              => 'string',
+			'sanitize_callback' => 'sanitize_text_field',
+			'default'           => '',
+		) );
+
+		register_setting( 'apf_settings_group', self::OPTION_CASE_STUDIES_TPL, array(
 			'type'              => 'string',
 			'sanitize_callback' => 'sanitize_text_field',
 			'default'           => '',
@@ -58,6 +77,29 @@ class APF_Settings {
 			array( $this, 'render_popup_id_field' ),
 			'apf-settings',
 			'apf_quote_section'
+		);
+
+		add_settings_section(
+			'apf_single_section',
+			'Single Product Page',
+			array( $this, 'render_single_section_description' ),
+			'apf-settings'
+		);
+
+		add_settings_field(
+			self::OPTION_WHY_CHOOSE_TPL,
+			'Why Choose Template ID',
+			array( $this, 'render_why_choose_field' ),
+			'apf-settings',
+			'apf_single_section'
+		);
+
+		add_settings_field(
+			self::OPTION_CASE_STUDIES_TPL,
+			'Case Studies Template ID',
+			array( $this, 'render_case_studies_field' ),
+			'apf-settings',
+			'apf_single_section'
 		);
 	}
 
@@ -91,6 +133,44 @@ class APF_Settings {
 			</form>
 		</div>
 		<?php
+	}
+
+	public function render_single_section_description() {
+		echo '<p>Replace sections on single product pages with Elementor templates.</p>';
+	}
+
+	public function render_why_choose_field() {
+		$value = get_option( self::OPTION_WHY_CHOOSE_TPL, '' );
+		printf(
+			'<input type="text" id="%1$s" name="%1$s" value="%2$s" class="regular-text" placeholder="e.g. 7342" />',
+			esc_attr( self::OPTION_WHY_CHOOSE_TPL ),
+			esc_attr( $value )
+		);
+		echo '<p class="description">Elementor template ID for the "Why Choose" section. Leave empty for the default layout.</p>';
+	}
+
+	public function render_case_studies_field() {
+		$value = get_option( self::OPTION_CASE_STUDIES_TPL, '' );
+		printf(
+			'<input type="text" id="%1$s" name="%1$s" value="%2$s" class="regular-text" placeholder="e.g. 7350" />',
+			esc_attr( self::OPTION_CASE_STUDIES_TPL ),
+			esc_attr( $value )
+		);
+		echo '<p class="description">Elementor template ID for the "Case Studies" section. Leave empty for the default layout.</p>';
+	}
+
+	/**
+	 * Get the Elementor template ID for the Why Choose section.
+	 */
+	public static function get_why_choose_template_id() {
+		return get_option( self::OPTION_WHY_CHOOSE_TPL, '' );
+	}
+
+	/**
+	 * Get the Elementor template ID for the Case Studies section.
+	 */
+	public static function get_case_studies_template_id() {
+		return get_option( self::OPTION_CASE_STUDIES_TPL, '' );
 	}
 
 	/**

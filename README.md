@@ -170,13 +170,27 @@ Filters sync with the URL for bookmarkable/shareable filtered views:
 - `name-asc` - Alphabetical A-Z
 - `name-desc` - Alphabetical Z-A
 
+## Settings (Products > Settings)
+
+### Quote Button
+- **Elementor Popup ID** — Enter an Elementor popup post ID to make "Get Quote" buttons open the popup. Leave empty for the default `/contact/` link.
+
+### Single Product Page
+- **Why Choose Template ID** — Elementor template ID to replace the "Why Choose" section on single product pages. Leave empty for the default layout.
+- **Case Studies Template ID** — Elementor template ID to replace the "Case Studies" section on single product pages. Leave empty for the default layout.
+
 ## Requirements
 
 - WordPress 5.0+
 - PHP 7.0+
 - jQuery (included with WordPress)
+- Elementor Pro (optional, for popup integration and single product bottom template)
 
 ## Changelog
+
+### 2.1.0
+- Added Elementor template integration for single product bottom sections
+- Fixed CSS duplication in single-product.css
 
 ### 1.0.0
 - Initial release

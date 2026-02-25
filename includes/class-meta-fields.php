@@ -35,11 +35,6 @@ class APF_Meta_Fields {
 			'type'        => 'text',
 			'placeholder' => 'e.g., 180°F',
 		),
-		'_product_rating' => array(
-			'label'       => 'Rating',
-			'type'        => 'number',
-			'placeholder' => 'e.g., 4.8',
-		),
 		'_product_description' => array(
 			'label'       => 'Product Description',
 			'type'        => 'textarea',
@@ -72,6 +67,7 @@ class APF_Meta_Fields {
 		}
 
 		wp_enqueue_media();
+		wp_enqueue_editor();
 
 		wp_enqueue_style(
 			'apf-meta-box',
@@ -83,7 +79,7 @@ class APF_Meta_Fields {
 		wp_enqueue_script(
 			'apf-meta-box',
 			APF_PLUGIN_URL . 'assets/js/meta-box.js',
-			array( 'jquery', 'jquery-ui-sortable' ),
+			array( 'jquery', 'jquery-ui-sortable', 'editor', 'quicktags' ),
 			APF_VERSION,
 			true
 		);
@@ -117,11 +113,14 @@ class APF_Meta_Fields {
 		) );
 
 		// Tabs (JSON array of {title, content})
+		// Note: no sanitize_callback here — sanitization happens in save_meta_boxes()
+		// before encoding to JSON. A callback would receive broken JSON because
+		// WordPress's update_metadata() runs wp_unslash() which strips the
+		// backslash-escaped quotes inside JSON strings containing HTML attributes.
 		register_post_meta( 'product', '_product_tabs', array(
 			'type'              => 'string',
 			'single'            => true,
 			'show_in_rest'      => true,
-			'sanitize_callback' => array( $this, 'sanitize_tabs_json' ),
 			'auth_callback'     => function ( $allowed, $meta_key, $post_id ) {
 				return current_user_can( 'edit_post', $post_id );
 			},
@@ -135,28 +134,6 @@ class APF_Meta_Fields {
 		$ids = array_map( 'absint', explode( ',', $value ) );
 		$ids = array_filter( $ids );
 		return implode( ',', $ids );
-	}
-
-	/**
-	 * Sanitize tabs JSON data
-	 */
-	public function sanitize_tabs_json( $value ) {
-		$tabs = json_decode( $value, true );
-		if ( ! is_array( $tabs ) ) {
-			return '';
-		}
-
-		$clean = array();
-		foreach ( $tabs as $tab ) {
-			if ( ! empty( $tab['title'] ) ) {
-				$clean[] = array(
-					'title'   => sanitize_text_field( $tab['title'] ),
-					'content' => wp_kses_post( $tab['content'] ),
-				);
-			}
-		}
-
-		return wp_json_encode( $clean );
 	}
 
 	/**
@@ -223,9 +200,6 @@ class APF_Meta_Fields {
 						value="<?php echo esc_attr( $value ); ?>"
 						class="regular-text"
 						placeholder="<?php echo esc_attr( $config['placeholder'] ); ?>"
-						<?php if ( 'number' === $config['type'] ) : ?>
-						step="0.1" min="0" max="5"
-						<?php endif; ?>
 					/>
 					<?php endif; ?>
 				</td>
@@ -268,6 +242,9 @@ class APF_Meta_Fields {
 
 	/**
 	 * Render tabs meta box
+	 *
+	 * Uses standard form array fields (name="...[]") instead of a hidden JSON
+	 * input so that HTML content survives POST encoding without corruption.
 	 */
 	public function render_tabs_meta_box( $post ) {
 		$tabs_json = get_post_meta( $post->ID, '_product_tabs', true );
@@ -278,21 +255,33 @@ class APF_Meta_Fields {
 		}
 		?>
 		<div class="apf-tabs-wrap">
-			<input type="hidden" id="apf-tabs-json" name="_product_tabs" value="<?php echo esc_attr( $tabs_json ); ?>" />
-
-			<div id="apf-tabs-list" class="apf-tabs-list">
-				<?php foreach ( $tabs as $i => $tab ) : ?>
-				<div class="apf-tab-row" data-index="<?php echo esc_attr( $i ); ?>">
+			<div id="apf-tabs-list" class="apf-tabs-list" data-next-index="<?php echo count( $tabs ); ?>">
+				<?php foreach ( $tabs as $i => $tab ) :
+					$editor_id = 'apf_tab_content_' . $i;
+				?>
+				<div class="apf-tab-row" data-index="<?php echo esc_attr( $i ); ?>" data-editor-id="<?php echo esc_attr( $editor_id ); ?>">
 					<span class="apf-tab-handle dashicons dashicons-menu"></span>
-					<input type="text" class="apf-tab-title regular-text" value="<?php echo esc_attr( $tab['title'] ); ?>" placeholder="Tab title" />
+					<input type="text" class="apf-tab-title regular-text" name="_product_tab_title[]" value="<?php echo esc_attr( $tab['title'] ); ?>" placeholder="Tab title" />
 					<button type="button" class="apf-tab-toggle button-link" aria-label="Toggle content">
-						<span class="dashicons dashicons-arrow-down-alt2"></span>
+						<span class="dashicons dashicons-arrow-up-alt2"></span>
 					</button>
 					<button type="button" class="apf-tab-remove button-link" aria-label="Remove tab">
 						<span class="dashicons dashicons-trash"></span>
 					</button>
-					<div class="apf-tab-content-wrap" style="display:none;">
-						<textarea class="apf-tab-content large-text" rows="5" placeholder="Tab content (HTML allowed)"><?php echo esc_textarea( $tab['content'] ); ?></textarea>
+					<div class="apf-tab-content-wrap">
+						<?php
+						wp_editor( $tab['content'], $editor_id, array(
+							'textarea_name' => '_product_tab_content[]',
+							'textarea_rows' => 10,
+							'media_buttons' => true,
+							'quicktags'     => true,
+							'wpautop'       => false,
+							'tinymce'       => array(
+								'wpautop'                 => false,
+								'extended_valid_elements' => 'table[width|border|cellspacing|cellpadding|class|style],tr[class|style],td[width|colspan|rowspan|class|style],th[width|colspan|rowspan|class|style|scope],thead,tbody,tfoot,img[src|alt|width|height|class|style],span[class|style],sup,sub',
+							),
+						) );
+						?>
 					</div>
 				</div>
 				<?php endforeach; ?>
@@ -338,10 +327,24 @@ class APF_Meta_Fields {
 			update_post_meta( $post_id, '_product_gallery', $gallery );
 		}
 
-		// Save tabs JSON
-		if ( isset( $_POST['_product_tabs'] ) ) {
-			update_post_meta( $post_id, '_product_tabs', wp_unslash( $_POST['_product_tabs'] ) );
+		// Save tabs from individual form fields (avoids JSON encoding issues with HTML)
+		$titles   = isset( $_POST['_product_tab_title'] ) ? (array) $_POST['_product_tab_title'] : array();
+		$contents = isset( $_POST['_product_tab_content'] ) ? (array) $_POST['_product_tab_content'] : array();
+
+		$tabs = array();
+		foreach ( $titles as $i => $title ) {
+			$title   = sanitize_text_field( wp_unslash( $title ) );
+			$content = isset( $contents[ $i ] ) ? wp_kses_post( wp_unslash( $contents[ $i ] ) ) : '';
+			if ( $title ) {
+				$tabs[] = array( 'title' => $title, 'content' => $content );
+			}
 		}
+
+		$tabs_json = ! empty( $tabs ) ? wp_json_encode( $tabs ) : '';
+		// wp_slash() compensates for the wp_unslash() that update_metadata()
+		// applies internally (wp-includes/meta.php), preserving escaped quotes
+		// inside JSON strings that contain HTML attributes.
+		update_post_meta( $post_id, '_product_tabs', wp_slash( $tabs_json ) );
 	}
 
 	/**
