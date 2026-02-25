@@ -46,6 +46,15 @@
 	box-sizing: border-box;
 }
 
+/* ---- Global reset inside .apf-sp ---- */
+
+.apf-sp,
+.apf-sp *,
+.apf-sp *::before,
+.apf-sp *::after {
+	box-sizing: border-box;
+}
+
 .apf-sp {
 	font-family: var(--font) !important;
 	color: var(--text);
@@ -62,12 +71,22 @@
 .apf-sp ol,
 .apf-sp dl {
 	padding: 0;
+/* Reset theme margins/padding on common elements inside .apf-sp */
+.apf-sp h1,
+.apf-sp h2,
+.apf-sp h3,
+.apf-sp p,
+.apf-sp ul,
+.apf-sp ol,
+.apf-sp dl {
+	padding: 0;
 }
 
 /* ==========================================================================
    Container
    ========================================================================== */
 
+.apf-sp .apf-sp-container {
 .apf-sp .apf-sp-container {
 	width: 100%;
 	max-width: 1344px;
@@ -80,11 +99,13 @@
    ========================================================================== */
 
 .apf-sp .apf-sp-reveal {
+.apf-sp .apf-sp-reveal {
 	opacity: 0;
 	transform: translateY(32px);
 	transition: opacity .7s var(--ease), transform .7s var(--ease);
 }
 
+.apf-sp .apf-sp-reveal.revealed {
 .apf-sp .apf-sp-reveal.revealed {
 	opacity: 1;
 	transform: translateY(0);
@@ -115,6 +136,8 @@
 
 .apf-sp .apf-sp-breadcrumb a:hover {
 	color: var(--navy) !important;
+.apf-sp .apf-sp-breadcrumb a:hover {
+	color: var(--navy) !important;
 }
 
 .apf-sp .apf-sp-sep {
@@ -140,6 +163,7 @@
 /* ---- Hero Grid ---- */
 
 .apf-sp .apf-sp-hero-grid {
+.apf-sp .apf-sp-hero-grid {
 	display: grid;
 	grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
 	gap: 3rem;
@@ -159,10 +183,12 @@
    ========================================================================== */
 
 .apf-sp .apf-sp-gallery {
+.apf-sp .apf-sp-gallery {
 	position: sticky;
 	top: 1.5rem;
 }
 
+.apf-sp .apf-sp-gallery-main {
 .apf-sp .apf-sp-gallery-main {
 	position: relative;
 	border-radius: var(--radius);
@@ -172,6 +198,7 @@
 }
 
 .apf-sp .apf-sp-viewport {
+.apf-sp .apf-sp-viewport {
 	position: relative;
 	aspect-ratio: 1 / .76;
 	overflow: hidden;
@@ -179,7 +206,13 @@
 
 .apf-sp .apf-sp-slide {
 	position: absolute !important;
+.apf-sp .apf-sp-slide {
+	position: absolute !important;
 	inset: 0;
+	width: 100% !important;
+	height: 100% !important;
+	object-fit: contain !important;
+	padding: 1.25rem !important;
 	width: 100% !important;
 	height: 100% !important;
 	object-fit: contain !important;
@@ -189,8 +222,11 @@
 	pointer-events: none;
 	margin: 0 !important;
 	max-width: none !important;
+	margin: 0 !important;
+	max-width: none !important;
 }
 
+.apf-sp .apf-sp-slide.active {
 .apf-sp .apf-sp-slide.active {
 	opacity: 1;
 	pointer-events: auto;
@@ -198,6 +234,9 @@
 
 /* ---- Arrows ---- */
 
+.apf-sp .apf-sp-arrow {
+	position: absolute !important;
+	top: 50% !important;
 .apf-sp .apf-sp-arrow {
 	position: absolute !important;
 	top: 50% !important;
@@ -222,8 +261,18 @@
 	line-height: 1 !important;
 	font-size: 0 !important;
 	outline: none;
+	box-shadow: 0 2px 8px rgba(28,58,138,.25) !important;
+	padding: 0 !important;
+	margin: 0 !important;
+	line-height: 1 !important;
+	font-size: 0 !important;
+	outline: none;
 }
 
+.apf-sp .apf-sp-arrow:hover,
+.apf-sp .apf-sp-arrow:focus {
+	background: var(--navy-dark) !important;
+	color: #fff !important;
 .apf-sp .apf-sp-arrow:hover,
 .apf-sp .apf-sp-arrow:focus {
 	background: var(--navy-dark) !important;
@@ -253,10 +302,14 @@
 .apf-sp .apf-sp-gallery[data-count="0"] .apf-sp-arrow,
 .apf-sp .apf-sp-gallery[data-count="1"] .apf-sp-arrow {
 	display: none !important;
+.apf-sp .apf-sp-gallery[data-count="0"] .apf-sp-arrow,
+.apf-sp .apf-sp-gallery[data-count="1"] .apf-sp-arrow {
+	display: none !important;
 }
 
 /* ---- Thumbnails ---- */
 
+.apf-sp .apf-sp-thumbs {
 .apf-sp .apf-sp-thumbs {
 	display: flex;
 	gap: .75rem;
@@ -266,6 +319,7 @@
 	scrollbar-width: none;
 }
 
+.apf-sp .apf-sp-thumbs::-webkit-scrollbar { display: none; }
 .apf-sp .apf-sp-thumbs::-webkit-scrollbar { display: none; }
 
 .apf-sp .apf-sp-thumb {
@@ -307,6 +361,7 @@
 /* ---- Empty gallery placeholder ---- */
 
 .apf-sp .apf-sp-gallery-empty {
+.apf-sp .apf-sp-gallery-empty {
 	display: flex;
 	align-items: center;
 	justify-content: center;
@@ -345,6 +400,7 @@
 /* ---- Rating ---- */
 
 .apf-sp .apf-sp-rating {
+.apf-sp .apf-sp-rating {
 	display: flex;
 	align-items: center;
 	gap: .375rem;
@@ -355,7 +411,12 @@
 	display: flex;
 	gap: 1px;
 }
+.apf-sp .apf-sp-stars {
+	display: flex;
+	gap: 1px;
+}
 
+.apf-sp .apf-sp-star {
 .apf-sp .apf-sp-star {
 	font-size: 1.125rem;
 	line-height: 1;
@@ -364,7 +425,14 @@
 .apf-sp .apf-sp-star--full  { color: var(--gold) !important; }
 .apf-sp .apf-sp-star--half  { color: var(--gold) !important; opacity: .5; }
 .apf-sp .apf-sp-star--empty { color: #d4d8dc !important; }
+.apf-sp .apf-sp-star--full  { color: var(--gold) !important; }
+.apf-sp .apf-sp-star--half  { color: var(--gold) !important; opacity: .5; }
+.apf-sp .apf-sp-star--empty { color: #d4d8dc !important; }
 
+.apf-sp .apf-sp-rating-num {
+	font-size: .875rem !important;
+	font-weight: 700 !important;
+	color: var(--text) !important;
 .apf-sp .apf-sp-rating-num {
 	font-size: .875rem !important;
 	font-weight: 700 !important;
@@ -394,9 +462,18 @@
 .apf-sp .apf-sp-body p:last-child {
 	margin-bottom: 0 !important;
 }
+.apf-sp .apf-sp-body p {
+	margin: 0 0 1rem !important;
+	color: var(--text-mid) !important;
+}
+
+.apf-sp .apf-sp-body p:last-child {
+	margin-bottom: 0 !important;
+}
 
 /* ---- CTA Buttons ---- */
 
+.apf-sp .apf-sp-cta {
 .apf-sp .apf-sp-cta {
 	display: flex;
 	gap: 1rem;
@@ -421,14 +498,26 @@
 	line-height: 1.4 !important;
 	letter-spacing: 0 !important;
 	text-transform: none !important;
+	line-height: 1.4 !important;
+	letter-spacing: 0 !important;
+	text-transform: none !important;
 }
 
 .apf-sp .apf-sp-btn--green {
 	background: var(--green) !important;
 	color: #fff !important;
 	border-color: var(--green) !important;
+.apf-sp .apf-sp-btn--green {
+	background: var(--green) !important;
+	color: #fff !important;
+	border-color: var(--green) !important;
 }
 
+.apf-sp .apf-sp-btn--green:hover,
+.apf-sp .apf-sp-btn--green:focus {
+	background: var(--green-dark) !important;
+	border-color: var(--green-dark) !important;
+	color: #fff !important;
 .apf-sp .apf-sp-btn--green:hover,
 .apf-sp .apf-sp-btn--green:focus {
 	background: var(--green-dark) !important;
@@ -441,8 +530,17 @@
 	background: transparent !important;
 	color: var(--navy) !important;
 	border-color: var(--navy) !important;
+.apf-sp .apf-sp-btn--outline {
+	background: transparent !important;
+	color: var(--navy) !important;
+	border-color: var(--navy) !important;
 }
 
+.apf-sp .apf-sp-btn--outline:hover,
+.apf-sp .apf-sp-btn--outline:focus {
+	background: var(--navy) !important;
+	color: #fff !important;
+	border-color: var(--navy) !important;
 .apf-sp .apf-sp-btn--outline:hover,
 .apf-sp .apf-sp-btn--outline:focus {
 	background: var(--navy) !important;
@@ -460,6 +558,7 @@
 	padding: 0 0 3rem;
 }
 
+.apf-sp .apf-sp-tabs-nav {
 .apf-sp .apf-sp-tabs-nav {
 	display: flex;
 	justify-content: center;
@@ -532,6 +631,7 @@
 }
 
 .apf-sp .apf-sp-tabs-panel.active {
+.apf-sp .apf-sp-tabs-panel.active {
 	display: block;
 }
 
@@ -539,7 +639,12 @@
 .apf-sp .apf-sp-tabs-panel strong  { color: var(--text) !important; font-weight: 700; }
 .apf-sp .apf-sp-tabs-panel ul      { margin: .5rem 0 1rem 1.25rem; padding: 0; list-style: disc; }
 .apf-sp .apf-sp-tabs-panel li      { margin-bottom: .375rem; color: var(--text-mid) !important; }
+.apf-sp .apf-sp-tabs-panel p      { margin: 0 0 .875rem; color: var(--text-mid) !important; }
+.apf-sp .apf-sp-tabs-panel strong  { color: var(--text) !important; font-weight: 700; }
+.apf-sp .apf-sp-tabs-panel ul      { margin: .5rem 0 1rem 1.25rem; padding: 0; list-style: disc; }
+.apf-sp .apf-sp-tabs-panel li      { margin-bottom: .375rem; color: var(--text-mid) !important; }
 
+.apf-sp .apf-sp-tabs-panel table {
 .apf-sp .apf-sp-tabs-panel table {
 	width: 100%;
 	border-collapse: collapse;
@@ -548,14 +653,20 @@
 
 .apf-sp .apf-sp-tabs-panel th,
 .apf-sp .apf-sp-tabs-panel td {
+.apf-sp .apf-sp-tabs-panel th,
+.apf-sp .apf-sp-tabs-panel td {
 	padding: .625rem 1rem;
+	border: 1px solid var(--border) !important;
 	border: 1px solid var(--border) !important;
 	text-align: left;
 }
 
 .apf-sp .apf-sp-tabs-panel th {
 	background: var(--bg-light) !important;
+.apf-sp .apf-sp-tabs-panel th {
+	background: var(--bg-light) !important;
 	font-weight: 600;
+	color: var(--text) !important;
 	color: var(--text) !important;
 }
 
@@ -563,6 +674,7 @@
    SECTION 2 — WHY CHOOSE
    ========================================================================== */
 
+.apf-sp .apf-sp-why {
 .apf-sp .apf-sp-why {
 	padding: 4.5rem 0;
 	background: var(--bg) !important;
@@ -593,6 +705,7 @@
 /* ---- Feature Cards ---- */
 
 .apf-sp .apf-sp-features {
+.apf-sp .apf-sp-features {
 	display: grid;
 	grid-template-columns: repeat(4, 1fr);
 	gap: 1.25rem;
@@ -606,6 +719,7 @@
 	transition: transform .25s var(--ease), box-shadow .25s var(--ease);
 }
 
+.apf-sp .apf-sp-fcard:hover {
 .apf-sp .apf-sp-fcard:hover {
 	transform: translateY(-4px);
 	box-shadow: var(--shadow-lg);
@@ -650,8 +764,13 @@
 	list-style: none !important;
 	padding: 0 !important;
 	margin: 0 !important;
+.apf-sp .apf-sp-fcard-list {
+	list-style: none !important;
+	padding: 0 !important;
+	margin: 0 !important;
 }
 
+.apf-sp .apf-sp-fcard-list li {
 .apf-sp .apf-sp-fcard-list li {
 	position: relative;
 	padding-left: 1rem !important;
@@ -664,12 +783,15 @@
 
 .apf-sp .apf-sp-fcard-list li::before {
 	content: '' !important;
+.apf-sp .apf-sp-fcard-list li::before {
+	content: '' !important;
 	position: absolute;
 	left: 0;
 	top: .55em;
 	width: 5px;
 	height: 5px;
 	border-radius: 50%;
+	background: var(--green) !important;
 	background: var(--green) !important;
 }
 
@@ -678,10 +800,12 @@
    ========================================================================== */
 
 .apf-sp .apf-sp-results {
+.apf-sp .apf-sp-results {
 	padding: 4.5rem 0 5rem;
 	background: var(--bg-blue) !important;
 }
 
+.apf-sp .apf-sp-cases {
 .apf-sp .apf-sp-cases {
 	display: grid;
 	grid-template-columns: repeat(4, 1fr);
@@ -693,10 +817,16 @@
 .apf-sp a.apf-sp-case,
 .apf-sp .apf-sp-case {
 	display: flex !important;
+.apf-sp a.apf-sp-case,
+.apf-sp .apf-sp-case {
+	display: flex !important;
 	flex-direction: column;
 	border: 2px solid var(--border) !important;
 	border-radius: var(--radius);
 	overflow: hidden;
+	background: var(--bg) !important;
+	text-decoration: none !important;
+	color: inherit !important;
 	background: var(--bg) !important;
 	text-decoration: none !important;
 	color: inherit !important;
@@ -705,13 +835,17 @@
 
 .apf-sp a.apf-sp-case:hover,
 .apf-sp .apf-sp-case:hover {
+.apf-sp a.apf-sp-case:hover,
+.apf-sp .apf-sp-case:hover {
 	transform: translateY(-4px);
 	box-shadow: var(--shadow-lg);
+	color: inherit !important;
 	color: inherit !important;
 }
 
 /* ---- Case Image ---- */
 
+.apf-sp .apf-sp-case-img {
 .apf-sp .apf-sp-case-img {
 	position: relative;
 	aspect-ratio: 4 / 3;
@@ -726,16 +860,26 @@
 	height: 100% !important;
 	object-fit: cover !important;
 	display: block !important;
+.apf-sp .apf-sp-case-img img {
+	width: 100% !important;
+	height: 100% !important;
+	object-fit: cover !important;
+	display: block !important;
 	transition: transform .4s var(--ease);
+	padding: 0 !important;
+	margin: 0 !important;
+	max-width: none !important;
 	padding: 0 !important;
 	margin: 0 !important;
 	max-width: none !important;
 }
 
 .apf-sp .apf-sp-case:hover .apf-sp-case-img img {
+.apf-sp .apf-sp-case:hover .apf-sp-case-img img {
 	transform: scale(1.05);
 }
 
+.apf-sp .apf-sp-case-placeholder {
 .apf-sp .apf-sp-case-placeholder {
 	display: flex;
 	align-items: center;
@@ -756,6 +900,7 @@
 }
 
 .apf-sp .apf-sp-case-header {
+.apf-sp .apf-sp-case-header {
 	display: flex;
 	align-items: flex-start;
 	justify-content: space-between;
@@ -773,6 +918,7 @@
 	padding: 0 !important;
 }
 
+.apf-sp .apf-sp-case-arrow {
 .apf-sp .apf-sp-case-arrow {
 	flex-shrink: 0;
 	display: flex !important;
@@ -819,9 +965,11 @@
 
 /* ==========================================================================
    RESPONSIVE — Tablet landscape (<=1080px)
+   RESPONSIVE — Tablet landscape (<=1080px)
    ========================================================================== */
 
 @media (max-width: 1080px) {
+	.apf-sp .apf-sp-hero-grid {
 	.apf-sp .apf-sp-hero-grid {
 		gap: 2rem;
 	}
@@ -831,9 +979,11 @@
 	}
 
 	.apf-sp .apf-sp-features {
+	.apf-sp .apf-sp-features {
 		grid-template-columns: repeat(2, 1fr);
 	}
 
+	.apf-sp .apf-sp-cases {
 	.apf-sp .apf-sp-cases {
 		grid-template-columns: repeat(2, 1fr);
 	}
@@ -850,9 +1000,11 @@
 
 /* ==========================================================================
    RESPONSIVE — Tablet portrait (<=768px)
+   RESPONSIVE — Tablet portrait (<=768px)
    ========================================================================== */
 
 @media (max-width: 768px) {
+	.apf-sp .apf-sp-container {
 	.apf-sp .apf-sp-container {
 		padding: 0 1.25rem;
 	}
@@ -863,10 +1015,12 @@
 
 	/* Stack hero columns */
 	.apf-sp .apf-sp-hero-grid {
+	.apf-sp .apf-sp-hero-grid {
 		grid-template-columns: 1fr;
 		gap: 1.75rem;
 	}
 
+	.apf-sp .apf-sp-gallery {
 	.apf-sp .apf-sp-gallery {
 		position: static;
 	}
@@ -889,6 +1043,7 @@
 
 	/* Stack CTA buttons */
 	.apf-sp .apf-sp-cta {
+	.apf-sp .apf-sp-cta {
 		flex-direction: column;
 	}
 
@@ -905,6 +1060,7 @@
 	}
 
 	.apf-sp .apf-sp-tabs-nav {
+	.apf-sp .apf-sp-tabs-nav {
 		overflow-x: auto;
 		scrollbar-width: none;
 		-webkit-overflow-scrolling: touch;
@@ -914,7 +1070,9 @@
 	}
 
 	.apf-sp .apf-sp-tabs-nav::-webkit-scrollbar { display: none; }
+	.apf-sp .apf-sp-tabs-nav::-webkit-scrollbar { display: none; }
 
+	.apf-sp .apf-sp-tabs-btn {
 	.apf-sp .apf-sp-tabs-btn {
 		flex: 0 0 auto;
 		padding: 1.25rem 0 1rem !important;
@@ -933,9 +1091,13 @@
 	/* Why Choose */
 	.apf-sp .apf-sp-why,
 	.apf-sp .apf-sp-results {
+	.apf-sp .apf-sp-why,
+	.apf-sp .apf-sp-results {
 		padding: 3rem 0;
 	}
 
+	.apf-sp .apf-sp-sec-title {
+		font-size: 1.375rem !important;
 	.apf-sp .apf-sp-sec-title {
 		font-size: 1.375rem !important;
 	}
@@ -946,10 +1108,12 @@
 	}
 
 	.apf-sp .apf-sp-features {
+	.apf-sp .apf-sp-features {
 		grid-template-columns: 1fr 1fr;
 		gap: 1rem;
 	}
 
+	.apf-sp .apf-sp-fcard {
 	.apf-sp .apf-sp-fcard {
 		padding: 1.25rem 1rem 1rem;
 	}
@@ -966,6 +1130,7 @@
 
 	/* Cases */
 	.apf-sp .apf-sp-cases {
+	.apf-sp .apf-sp-cases {
 		grid-template-columns: 1fr 1fr;
 		gap: 1rem;
 	}
@@ -979,9 +1144,11 @@
 
 /* ==========================================================================
    RESPONSIVE — Mobile (<=540px)
+   RESPONSIVE — Mobile (<=540px)
    ========================================================================== */
 
 @media (max-width: 540px) {
+	.apf-sp .apf-sp-container {
 	.apf-sp .apf-sp-container {
 		padding: 0 1rem;
 	}
@@ -990,6 +1157,7 @@
 		font-size: .8125rem;
 	}
 
+	.apf-sp .apf-sp-viewport {
 	.apf-sp .apf-sp-viewport {
 		aspect-ratio: 4 / 3;
 	}
@@ -1038,18 +1206,22 @@
 
 	/* Feature cards: single column */
 	.apf-sp .apf-sp-features {
+	.apf-sp .apf-sp-features {
 		grid-template-columns: 1fr;
 	}
 
+	.apf-sp .apf-sp-fcard {
 	.apf-sp .apf-sp-fcard {
 		padding: 1.5rem 1.25rem;
 	}
 
 	/* Case studies: single column */
 	.apf-sp .apf-sp-cases {
+	.apf-sp .apf-sp-cases {
 		grid-template-columns: 1fr;
 	}
 
+	.apf-sp .apf-sp-case-img {
 	.apf-sp .apf-sp-case-img {
 		aspect-ratio: 16 / 10;
 	}
