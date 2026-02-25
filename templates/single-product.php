@@ -3,9 +3,11 @@
  * Single Product Template
  *
  * Sections:
- *   1. Hero – Breadcrumb, gallery + product info side-by-side, full-width tabs below
- *   2. Why Choose – 4 feature cards with green icons and bullet lists
- *   3. Real Results – Case study image cards with green border accents
+ *   1. Breadcrumb Bar – Full-width gray bar
+ *   2. Hero – Gallery + product info side-by-side
+ *   3. Tabs – Full-width section with tabbed content
+ *   4. Why Choose – 4 feature cards with green icons and bullet lists
+ *   5. Real Results – Case study image cards with blue accent areas
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -82,12 +84,10 @@ while ( have_posts() ) :
 <div class="apf-sp">
 
 <!-- ================================================================
-     SECTION 1: HERO
+     BREADCRUMB BAR
      ================================================================ -->
-<section class="apf-sp-hero">
+<div class="apf-sp-breadcrumb-bar">
 	<div class="apf-sp-container">
-
-		<!-- Breadcrumb -->
 		<nav class="apf-sp-breadcrumb" aria-label="Breadcrumb">
 			<a href="<?php echo esc_url( home_url( '/' ) ); ?>">Home</a>
 			<span class="apf-sp-sep">/</span>
@@ -104,6 +104,14 @@ while ( have_posts() ) :
 			<?php endif; ?>
 			<span class="apf-sp-crumb-current"><?php echo esc_html( get_the_title() ); ?></span>
 		</nav>
+	</div>
+</div>
+
+<!-- ================================================================
+     SECTION 1: HERO
+     ================================================================ -->
+<section class="apf-sp-hero">
+	<div class="apf-sp-container">
 
 		<!-- Hero Grid: Gallery + Info -->
 		<div class="apf-sp-hero-grid">
@@ -202,39 +210,43 @@ while ( have_posts() ) :
 
 		</div><!-- .apf-sp-hero-grid -->
 
-		<!-- ====== Full-width Tabs (below hero grid) ====== -->
-		<?php if ( ! empty( $tabs ) ) : ?>
-		<div class="apf-sp-tabs">
-			<div class="apf-sp-tabs-nav" role="tablist">
-				<?php foreach ( $tabs as $i => $tab ) : ?>
-				<button
-					type="button"
-					class="apf-sp-tabs-btn<?php echo 0 === $i ? ' active' : ''; ?>"
-					role="tab"
-					aria-selected="<?php echo 0 === $i ? 'true' : 'false'; ?>"
-					aria-controls="apf-tp-<?php echo esc_attr( $i ); ?>"
-					data-tab="<?php echo esc_attr( $i ); ?>"
-				>
-					<?php echo esc_html( $tab['title'] ); ?>
-				</button>
-				<?php endforeach; ?>
-			</div>
-
-			<?php foreach ( $tabs as $i => $tab ) : ?>
-			<div
-				class="apf-sp-tabs-panel<?php echo 0 === $i ? ' active' : ''; ?>"
-				id="apf-tp-<?php echo esc_attr( $i ); ?>"
-				role="tabpanel"
-				<?php echo 0 !== $i ? 'hidden' : ''; ?>
-			>
-				<?php echo wp_kses_post( $tab['content'] ); ?>
-			</div>
-			<?php endforeach; ?>
-		</div>
-		<?php endif; ?>
-
 	</div>
 </section>
+
+<!-- ================================================================
+     SECTION: TABS (full-width)
+     ================================================================ -->
+<?php if ( ! empty( $tabs ) ) : ?>
+<section class="apf-sp-tabs-section">
+	<div class="apf-sp-container">
+		<div class="apf-sp-tabs-nav" role="tablist">
+			<?php foreach ( $tabs as $i => $tab ) : ?>
+			<button
+				type="button"
+				class="apf-sp-tabs-btn<?php echo 0 === $i ? ' active' : ''; ?>"
+				role="tab"
+				aria-selected="<?php echo 0 === $i ? 'true' : 'false'; ?>"
+				aria-controls="apf-tp-<?php echo esc_attr( $i ); ?>"
+				data-tab="<?php echo esc_attr( $i ); ?>"
+			>
+				<?php echo esc_html( $tab['title'] ); ?>
+			</button>
+			<?php endforeach; ?>
+		</div>
+
+		<?php foreach ( $tabs as $i => $tab ) : ?>
+		<div
+			class="apf-sp-tabs-panel<?php echo 0 === $i ? ' active' : ''; ?>"
+			id="apf-tp-<?php echo esc_attr( $i ); ?>"
+			role="tabpanel"
+			<?php echo 0 !== $i ? 'hidden' : ''; ?>
+		>
+			<?php echo wp_kses_post( $tab['content'] ); ?>
+		</div>
+		<?php endforeach; ?>
+	</div>
+</section>
+<?php endif; ?>
 
 <!-- ================================================================
      SECTION 2: WHY CHOOSE
@@ -350,10 +362,12 @@ $case_studies = apply_filters( 'apf_case_studies', array(
 					<div class="apf-sp-case-header">
 						<h3 class="apf-sp-case-title"><?php echo esc_html( $cs['title'] ); ?></h3>
 						<span class="apf-sp-case-arrow">
-							<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+							<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
 						</span>
 					</div>
-					<p class="apf-sp-case-desc"><?php echo esc_html( $cs['desc'] ); ?></p>
+					<div class="apf-sp-case-accent">
+						<p class="apf-sp-case-desc"><?php echo esc_html( $cs['desc'] ); ?></p>
+					</div>
 				</div>
 			</a>
 			<?php endforeach; ?>

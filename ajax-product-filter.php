@@ -134,7 +134,7 @@ class Ajax_Product_Filter {
 		// Google Fonts
 		wp_enqueue_style(
 			'apf-google-fonts',
-			'https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=DM+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap',
+			'https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;500;600;700;800&display=swap',
 			array(),
 			null
 		);

@@ -141,7 +141,7 @@ class APF_Meta_Fields {
 	 * Sanitize tabs JSON data
 	 */
 	public function sanitize_tabs_json( $value ) {
-		$tabs = json_decode( wp_unslash( $value ), true );
+		$tabs = json_decode( $value, true );
 		if ( ! is_array( $tabs ) ) {
 			return '';
 		}
@@ -340,8 +340,7 @@ class APF_Meta_Fields {
 
 		// Save tabs JSON
 		if ( isset( $_POST['_product_tabs'] ) ) {
-			$tabs = $this->sanitize_tabs_json( $_POST['_product_tabs'] );
-			update_post_meta( $post_id, '_product_tabs', $tabs );
+			update_post_meta( $post_id, '_product_tabs', wp_unslash( $_POST['_product_tabs'] ) );
 		}
 	}
 

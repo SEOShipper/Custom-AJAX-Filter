@@ -556,7 +556,6 @@
     cursor: pointer;
     transition: all var(--apf-transition);
     border: 3px solid transparent;
-    width: 289px;
 }
 
 .apf-btn-primary {
