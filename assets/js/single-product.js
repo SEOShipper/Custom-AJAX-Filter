@@ -138,11 +138,31 @@
 	}
 
 	/* ==================================================================
+	   Quote Popup
+	   ================================================================== */
+
+	function initQuotePopup() {
+		var popupId = window.apfSingleProduct && window.apfSingleProduct.popupId;
+		if (!popupId) return;
+
+		document.addEventListener('click', function (e) {
+			var btn = e.target.closest('.apf-quote-btn');
+			if (!btn) return;
+
+			if (typeof elementorProFrontend !== 'undefined') {
+				e.preventDefault();
+				elementorProFrontend.modules.popup.showPopup({ id: popupId });
+			}
+		});
+	}
+
+	/* ==================================================================
 	   Init
 	   ================================================================== */
 
 	initGallery();
 	initTabs();
 	initReveal();
+	initQuotePopup();
 
 })();

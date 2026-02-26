@@ -72,9 +72,8 @@ while ( have_posts() ) :
 		}
 	}
 
-	// Quote URL — use Elementor popup if configured, otherwise link to contact page
-	$popup_url = APF_Settings::get_popup_url();
-	$quote_url = $popup_url ? $popup_url : add_query_arg( 'product', rawurlencode( get_the_title() ), '/contact/' );
+	// Quote URL — fallback href; JS opens Elementor popup when configured
+	$quote_url = add_query_arg( 'product', rawurlencode( get_the_title() ), '/contact/' );
 ?>
 
 <div class="apf-sp">
@@ -177,7 +176,7 @@ while ( have_posts() ) :
 
 				<!-- CTA Buttons -->
 				<div class="apf-sp-cta">
-					<a href="<?php echo esc_url( $quote_url ); ?>" class="apf-sp-btn apf-sp-btn--green">Get Quote</a>
+					<a href="<?php echo esc_url( $quote_url ); ?>" class="apf-sp-btn apf-sp-btn--green apf-quote-btn">Get Quote</a>
 					<a href="<?php echo esc_url( home_url( '/contact/' ) ); ?>" class="apf-sp-btn apf-sp-btn--outline">Contact Us</a>
 				</div>
 			</div>

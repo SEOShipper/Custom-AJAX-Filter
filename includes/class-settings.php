@@ -174,13 +174,20 @@ class APF_Settings {
 	}
 
 	/**
+	 * Get the raw popup post ID (or empty string if not configured).
+	 */
+	public static function get_popup_id() {
+		return get_option( self::OPTION_POPUP_ID, '' );
+	}
+
+	/**
 	 * Build the Elementor popup action URL for a given popup ID.
 	 *
 	 * Returns an empty string when no popup ID is configured so callers
 	 * can fall back to the default quote link.
 	 */
 	public static function get_popup_url() {
-		$popup_id = get_option( self::OPTION_POPUP_ID, '' );
+		$popup_id = self::get_popup_id();
 		if ( empty( $popup_id ) ) {
 			return '';
 		}

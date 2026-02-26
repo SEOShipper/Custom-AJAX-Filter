@@ -122,6 +122,7 @@ class Ajax_Product_Filter {
 		wp_localize_script( 'apf-filter-script', 'apfAjax', array(
 			'ajaxurl' => admin_url( 'admin-ajax.php' ),
 			'nonce'   => wp_create_nonce( 'apf_filter_nonce' ),
+			'popupId' => APF_Settings::get_popup_id(),
 		) );
 	}
 
@@ -155,6 +156,10 @@ class Ajax_Product_Filter {
 			APF_VERSION,
 			true
 		);
+
+		wp_localize_script( 'apf-single-product', 'apfSingleProduct', array(
+			'popupId' => APF_Settings::get_popup_id(),
+		) );
 	}
 
 	/**

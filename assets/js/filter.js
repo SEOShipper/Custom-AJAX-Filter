@@ -433,6 +433,14 @@
         }
     };
 
+    // Open Elementor popup for all Get Quote buttons (works with AJAX-loaded cards)
+    $(document).on('click', '.apf-quote-btn', function(e) {
+        if (apfAjax.popupId && typeof elementorProFrontend !== 'undefined') {
+            e.preventDefault();
+            elementorProFrontend.modules.popup.showPopup({ id: apfAjax.popupId });
+        }
+    });
+
     // Initialize on DOM ready
     $(document).ready(function() {
         APFFilter.init();
