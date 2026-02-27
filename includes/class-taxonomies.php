@@ -102,6 +102,12 @@ class APF_Taxonomies {
 
 	private function __construct() {
 		add_action( 'init', array( $this, 'register_taxonomies' ) );
+		add_action( 'init', array( $this, 'register_term_meta' ) );
+
+		add_action( 'product_type_add_form_fields', array( $this, 'add_term_link_field' ) );
+		add_action( 'product_type_edit_form_fields', array( $this, 'edit_term_link_field' ), 10, 2 );
+		add_action( 'created_product_type', array( $this, 'save_term_link_field' ) );
+		add_action( 'edited_product_type', array( $this, 'save_term_link_field' ) );
 	}
 
 	/**
@@ -181,5 +187,55 @@ class APF_Taxonomies {
 	 */
 	public function get_taxonomies() {
 		return $this->taxonomies;
+	}
+
+	/**
+	 * Register term meta for product_type link
+	 */
+	public function register_term_meta() {
+		register_term_meta( 'product_type', '_product_type_link', array(
+			'type'              => 'string',
+			'single'            => true,
+			'sanitize_callback' => 'esc_url_raw',
+			'show_in_rest'      => true,
+		) );
+	}
+
+	/**
+	 * Link field on the "Add New Product Type" form
+	 */
+	public function add_term_link_field() {
+		?>
+		<div class="form-field">
+			<label for="product-type-link">Link URL</label>
+			<input type="url" name="product_type_link" id="product-type-link" value="" />
+			<p class="description">URL used in the breadcrumb on single product pages (e.g. a filtered archive page).</p>
+		</div>
+		<?php
+	}
+
+	/**
+	 * Link field on the "Edit Product Type" form
+	 */
+	public function edit_term_link_field( $term, $taxonomy ) {
+		$link = get_term_meta( $term->term_id, '_product_type_link', true );
+		?>
+		<tr class="form-field">
+			<th scope="row"><label for="product-type-link">Link URL</label></th>
+			<td>
+				<input type="url" name="product_type_link" id="product-type-link" value="<?php echo esc_url( $link ); ?>" class="large-text" />
+				<p class="description">URL used in the breadcrumb on single product pages (e.g. a filtered archive page).</p>
+			</td>
+		</tr>
+		<?php
+	}
+
+	/**
+	 * Save the link field when a product_type term is created or edited
+	 */
+	public function save_term_link_field( $term_id ) {
+		if ( isset( $_POST['product_type_link'] ) ) {
+			update_term_meta( $term_id, '_product_type_link', esc_url_raw( $_POST['product_type_link'] ) );
+		}
 	}
 }

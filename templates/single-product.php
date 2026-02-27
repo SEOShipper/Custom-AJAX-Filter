@@ -66,10 +66,7 @@ while ( have_posts() ) :
 	$type_link     = '';
 	if ( $product_types && ! is_wp_error( $product_types ) ) {
 		$type_name = $product_types[0]->name;
-		$type_link = get_term_link( $product_types[0] );
-		if ( is_wp_error( $type_link ) ) {
-			$type_link = '';
-		}
+		$type_link = get_term_meta( $product_types[0]->term_id, '_product_type_link', true );
 	}
 
 	// Quote URL — fallback href; JS opens Elementor popup when configured

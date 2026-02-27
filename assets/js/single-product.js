@@ -33,6 +33,10 @@
 				slides[i].classList.toggle('active', i === idx);
 				if (thumbs[i]) thumbs[i].classList.toggle('active', i === idx);
 			}
+
+			if (thumbs[idx]) {
+				thumbs[idx].scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'nearest' });
+			}
 		}
 
 		if (prev) prev.addEventListener('click', function () { go(idx - 1); });

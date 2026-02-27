@@ -39,7 +39,7 @@ ajax-product-filter/
 ### Key Classes (all singletons)
 - **Ajax_Product_Filter** — Main orchestrator, loads dependencies, registers hooks
 - **APF_Post_Type** — Registers `product` CPT (priority 0, WooCommerce conflict guard)
-- **APF_Taxonomies** — Registers 6 taxonomies against `product` CPT
+- **APF_Taxonomies** — Registers 6 taxonomies against `product` CPT; manages `_product_type_link` term meta (admin form fields + save)
 - **APF_Meta_Fields** — 3 meta boxes: specs (text fields), gallery (media picker), tabs (WYSIWYG repeater)
 - **APF_Shortcodes** — `[product_filters]` and `[product_grid]` shortcodes
 - **APF_Ajax_Handler** — `wp_ajax_apf_filter_products` endpoint with term count caching
@@ -48,7 +48,7 @@ ajax-product-filter/
 ### Post Type & Taxonomies
 - **CPT**: `product` (has_archive, show_in_rest, dashicons-cart)
 - **Taxonomies** (registered to `product`):
-  - `product_type` — Product category (private, not in filters)
+  - `product_type` — Product category (private, not in filters); has `_product_type_link` term meta for breadcrumb URL
   - `product_label` — Display label for cards (private)
   - `product_brand` — Replace brand (public, filterable)
   - `product_application` — Application type (public, filterable)
@@ -64,7 +64,7 @@ ajax-product-filter/
 
 ### Single Product Template
 Top sections always plugin-rendered; bottom sections conditionally replaced by an Elementor template:
-1. **Breadcrumb + Hero** — Breadcrumb bar, gallery (main+thumbs+arrows), product info, content, action buttons
+1. **Breadcrumb + Hero** — Breadcrumb bar (uses `_product_type_link` term meta for product type URL), gallery (main+thumbs+arrows), product info, content, action buttons
 2. **Tabs** — Full-width tabbed content from `_product_tabs` meta
 3. **Why Choose** — If `apf_why_choose_template_id` is set, renders that Elementor template. Otherwise falls back to default features grid (`apf_why_choose_title`, `apf_why_choose_subtitle` filters)
 4. **Case Studies** — If `apf_case_studies_template_id` is set, renders that Elementor template. Otherwise falls back to default stats cards (`apf_results_title`, `apf_results_subtitle` filters)

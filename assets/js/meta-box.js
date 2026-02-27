@@ -195,9 +195,9 @@
 				var editorId = $(this).data('editor-id');
 				if (typeof tinymce !== 'undefined') {
 					var editor = tinymce.get(editorId);
-					if (editor) {
-						editor.save();
-					}
+				if (editor && !editor.isHidden()) {
+					editor.save();
+				}
 				}
 				removeEditor(editorId);
 			});

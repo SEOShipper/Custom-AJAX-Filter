@@ -282,8 +282,7 @@
 .apf-sp .apf-sp-thumbs::-webkit-scrollbar { display: none; }
 
 .apf-sp .apf-sp-thumb {
-	flex: 1 1 0;
-	min-width: 0;
+	flex: 0 0 calc(25% - 0.5625rem);
 	aspect-ratio: 4 / 3;
 	max-height: 109px;
 	border: 2px solid transparent !important;
