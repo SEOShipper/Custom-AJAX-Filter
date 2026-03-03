@@ -60,7 +60,7 @@ ajax-product-filter/
 - `_product_flow_rate`, `_product_micron`, `_product_temp` — Spec values
 - `_product_description` — Card description text
 - `_product_gallery` — Comma-separated attachment IDs
-- `_product_tabs` — JSON array of `{title, content}` objects (content edited via TinyMCE WYSIWYG)
+- `_product_tabs` — JSON array of `{title, content}` objects (content edited via TinyMCE WYSIWYG). Three-layer content-loss protection: (1) JS `safeSyncEditor()` prevents empty TinyMCE from overwriting textarea, (2) PHP preserves existing DB content when incoming content is empty for the same tab title, (3) `healBrokenEditors()` auto-repairs TinyMCE visual editors that fail to load textarea content
 
 ### Single Product Template
 Top sections always plugin-rendered; bottom sections conditionally replaced by an Elementor template:

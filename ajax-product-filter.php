@@ -3,7 +3,7 @@
  * Plugin Name: AJAX Product Filter
  * Plugin URI: https://example.com/ajax-product-filter
  * Description: AJAX-based filtering system for product pages with custom taxonomies and meta fields.
- * Version: 2.0.0
+ * Version: 2.0.1
  * Author: EcomExperts
  * Author URI: https://example.com
  * License: GPL-2.0+

@@ -331,16 +331,39 @@ class APF_Meta_Fields {
 		$titles   = isset( $_POST['_product_tab_title'] ) ? (array) $_POST['_product_tab_title'] : array();
 		$contents = isset( $_POST['_product_tab_content'] ) ? (array) $_POST['_product_tab_content'] : array();
 
+		// Load existing tabs for content-loss protection
+		$existing_json = get_post_meta( $post_id, '_product_tabs', true );
+		$existing_tabs = ! empty( $existing_json ) ? json_decode( $existing_json, true ) : array();
+		if ( ! is_array( $existing_tabs ) ) {
+			$existing_tabs = array();
+		}
+		$existing_by_title = array();
+		foreach ( $existing_tabs as $et ) {
+			if ( ! empty( $et['title'] ) && ! empty( $et['content'] ) ) {
+				$existing_by_title[ $et['title'] ] = $et['content'];
+			}
+		}
+
 		$tabs = array();
 		foreach ( $titles as $i => $title ) {
 			$title   = sanitize_text_field( wp_unslash( $title ) );
 			$content = isset( $contents[ $i ] ) ? wp_kses_post( wp_unslash( $contents[ $i ] ) ) : '';
-			if ( $title ) {
-				$tabs[] = array( 'title' => $title, 'content' => $content );
+
+			if ( ! $title ) {
+				continue;
 			}
+
+			// Server-side guard: if incoming content is empty but existing
+			// DB content for the same tab title is non-empty, preserve it.
+			if ( empty( trim( $content ) ) && isset( $existing_by_title[ $title ] ) ) {
+				$content = $existing_by_title[ $title ];
+			}
+
+			$tabs[] = array( 'title' => $title, 'content' => $content );
 		}
 
 		$tabs_json = ! empty( $tabs ) ? wp_json_encode( $tabs ) : '';
+
 		// wp_slash() compensates for the wp_unslash() that update_metadata()
 		// applies internally (wp-includes/meta.php), preserving escaped quotes
 		// inside JSON strings that contain HTML attributes.

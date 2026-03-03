@@ -193,12 +193,7 @@
 		start: function () {
 			$tabsList.find('.apf-tab-row').each(function () {
 				var editorId = $(this).data('editor-id');
-				if (typeof tinymce !== 'undefined') {
-					var editor = tinymce.get(editorId);
-				if (editor && !editor.isHidden()) {
-					editor.save();
-				}
-				}
+				safeSyncEditor(editorId);
 				removeEditor(editorId);
 			});
 		},
@@ -210,17 +205,60 @@
 		}
 	});
 
+	/**
+	 * Safely sync a single TinyMCE editor to its textarea.
+	 * Guards against the case where TinyMCE shows empty but the
+	 * textarea already has content (broken init) — never overwrite
+	 * good content with an empty editor state.
+	 */
+	function safeSyncEditor(editorId) {
+		var $textarea = $('#' + editorId);
+		if (!$textarea.length) return;
+
+		var textareaContent = ($textarea.val() || '').replace(/\s+/g, '');
+
+		if (typeof tinymce === 'undefined') return;
+		var editor = tinymce.get(editorId);
+		if (!editor || editor.isHidden()) return;
+
+		var editorContent = (editor.getContent() || '').replace(/\s+/g, '');
+
+		if (!editorContent && textareaContent) return;
+
+		editor.save();
+	}
+
 	// Sync TinyMCE content to textareas before form submission
 	$('#post').on('submit', function () {
 		$tabsList.find('.apf-tab-row').each(function () {
 			var editorId = $(this).data('editor-id');
-			if (typeof tinymce !== 'undefined') {
-				var editor = tinymce.get(editorId);
-				if (editor && !editor.isHidden()) {
-					editor.save();
-				}
+			safeSyncEditor(editorId);
+		});
+	});
+
+	/**
+	 * Post-load health check: detect TinyMCE editors that failed to load
+	 * their textarea content and re-push the content into the visual editor.
+	 */
+	function healBrokenEditors() {
+		$tabsList.find('.apf-tab-row').each(function () {
+			var editorId = $(this).data('editor-id');
+			if (typeof tinymce === 'undefined') return;
+			var editor = tinymce.get(editorId);
+			if (!editor || editor.isHidden()) return;
+
+			var editorContent = (editor.getContent() || '').replace(/\s+/g, '');
+			var textareaContent = ($('#' + editorId).val() || '').replace(/\s+/g, '');
+
+			if (!editorContent && textareaContent) {
+				editor.setContent($('#' + editorId).val());
 			}
 		});
+	}
+
+	$(window).on('load', function () {
+		setTimeout(healBrokenEditors, 1000);
+		setTimeout(healBrokenEditors, 3000);
 	});
 
 })(jQuery);

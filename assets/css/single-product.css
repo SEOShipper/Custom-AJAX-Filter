@@ -515,7 +515,7 @@
 
 .apf-sp .apf-sp-tabs-panel {
 	padding: 2.5rem 150px;
-	max-width: 979px;
+	/* max-width: 979px; */
 	font-size: 18px;
 	line-height: 1.65;
 	color: var(--text-mid) !important;

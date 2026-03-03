@@ -136,20 +136,18 @@ while ( have_posts() ) :
 					<?php endif; ?>
 				</div>
 
-				<?php if ( count( $gallery ) > 1 ) : ?>
-				<div class="apf-sp-thumbs">
-					<?php foreach ( $gallery as $i => $img ) : ?>
-					<button
-						type="button"
-						class="apf-sp-thumb<?php echo 0 === $i ? ' active' : ''; ?>"
-						data-index="<?php echo esc_attr( $i ); ?>"
-						aria-label="View image <?php echo esc_attr( $i + 1 ); ?>"
-					>
-						<img src="<?php echo esc_url( $img['thumb'] ); ?>" alt="" />
-					</button>
-					<?php endforeach; ?>
-				</div>
-				<?php endif; ?>
+			<div class="apf-sp-thumbs">
+				<?php foreach ( $gallery as $i => $img ) : ?>
+				<button
+					type="button"
+					class="apf-sp-thumb<?php echo 0 === $i ? ' active' : ''; ?>"
+					data-index="<?php echo esc_attr( $i ); ?>"
+					aria-label="View image <?php echo esc_attr( $i + 1 ); ?>"
+				>
+					<img src="<?php echo esc_url( $img['thumb'] ); ?>" alt="" />
+				</button>
+				<?php endforeach; ?>
+			</div>
 
 				<?php else : ?>
 				<!-- Placeholder -->
