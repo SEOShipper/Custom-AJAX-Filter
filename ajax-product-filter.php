@@ -61,6 +61,7 @@ class Ajax_Product_Filter {
 		require_once APF_PLUGIN_DIR . 'includes/class-shortcodes.php';
 		require_once APF_PLUGIN_DIR . 'includes/class-ajax-handler.php';
 		require_once APF_PLUGIN_DIR . 'includes/class-settings.php';
+		require_once APF_PLUGIN_DIR . 'includes/class-import-export.php';
 	}
 
 	/**
@@ -74,6 +75,7 @@ class Ajax_Product_Filter {
 		APF_Shortcodes::get_instance();
 		APF_Ajax_Handler::get_instance();
 		APF_Settings::get_instance();
+		APF_Import_Export::get_instance();
 
 		// Enqueue assets
 		add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_assets' ) );
