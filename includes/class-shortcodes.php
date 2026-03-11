@@ -57,6 +57,7 @@ class APF_Shortcodes {
 			'product_application' => '',
 			'limit'               => '',
 			'show_description'    => '',
+			'align'               => '',
 		), $atts, 'product_grid' );
 
 		// Auto-detect display-only mode when limit is set

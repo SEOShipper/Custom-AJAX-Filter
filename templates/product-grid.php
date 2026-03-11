@@ -18,6 +18,7 @@ $limit = isset($atts['limit']) ? $atts['limit'] : '';
 $show_count = !empty($atts['show_count']);
 $show_sort = !empty($atts['show_sort']);
 $show_description = !empty($atts['show_description']);
+$align = isset($atts['align']) ? sanitize_html_class($atts['align']) : '';
 $show_header = !empty($atts['title']) || $show_count || $show_sort;
 ?>
 
@@ -51,7 +52,7 @@ $show_header = !empty($atts['title']) || $show_count || $show_sort;
     <?php endif; ?>
 
     <!-- Product Grid -->
-    <div class="apf-product-grid apf-columns-<?php echo esc_attr($columns); ?>">
+    <div class="apf-product-grid apf-columns-<?php echo esc_attr($columns); ?><?php echo $align ? ' apf-align-' . esc_attr($align) : ''; ?>">
         <?php if ($products->have_posts()) : ?>
             <?php while ($products->have_posts()) : $products->the_post(); ?>
                 <?php include APF_PLUGIN_DIR . 'templates/product-card.php'; ?>

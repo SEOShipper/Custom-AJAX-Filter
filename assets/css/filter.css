@@ -5,8 +5,10 @@
 
 /* CSS Custom Properties */
 :root {
-    --apf-primary: #1e4164;
-    --apf-primary-hover: #163350;
+    --apf-primary: #1c3a8a;
+    --apf-primary-hover: #162f6e;
+    --apf-accent: #3f9f44;
+    --apf-accent-hover: #358a3a;
     --apf-text: #343434;
     --apf-text-muted: #8B8B8B;
     --apf-text-light: #9ca3af;
@@ -14,7 +16,7 @@
     --apf-border-dark: #d1d5db;
     --apf-bg: #fff;
     --apf-bg-card: #ffffff;
-    --apf-bg-image: #f0f0f0;
+    --apf-bg-image: rgba(156, 176, 199, 0.36);
     --apf-white: #ffffff;
     --apf-shadow-card: 0 2px 8px rgba(0, 0, 0, 0.06);
     --apf-radius: 8px;
@@ -130,7 +132,7 @@
 .apf-search-input:focus {
     outline: none;
     border-color: var(--apf-primary);
-    box-shadow: 0 0 0 3px rgba(30, 65, 100, 0.1);
+    box-shadow: 0 0 0 3px rgba(28, 58, 138, 0.1);
 }
 
 .apf-search-input::placeholder {
@@ -242,7 +244,7 @@
 }
 
 .apf-checkbox:focus + .apf-checkbox-custom {
-    box-shadow: 0 0 0 3px rgba(30, 65, 100, 0.15);
+    box-shadow: 0 0 0 3px rgba(28, 58, 138, 0.15);
 }
 
 .apf-checkbox-label:hover .apf-checkbox-custom {
@@ -397,13 +399,31 @@
     grid-template-columns: repeat(4, 1fr);
 }
 
+/* Align: center — uses flexbox so incomplete last row is centered */
+.apf-product-grid.apf-align-center {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 1.25rem;
+}
+
+.apf-align-center > .apf-product-card {
+    width: calc(100% / var(--apf-columns) - 1.25rem * (var(--apf-columns) - 1) / var(--apf-columns));
+    max-width: 360px;
+}
+
+.apf-align-center.apf-columns-1 { --apf-columns: 1; }
+.apf-align-center.apf-columns-2 { --apf-columns: 2; }
+.apf-align-center.apf-columns-3 { --apf-columns: 3; }
+.apf-align-center.apf-columns-4 { --apf-columns: 4; }
+
 /* ==========================================================================
    Product Card
    ========================================================================== */
 
 .apf-product-card {
     background: var(--apf-bg-card);
-    border: 1px solid var(--apf-border);
+    border: 2px solid var(--apf-border);
     border-radius: var(--apf-radius-lg);
     overflow: hidden;
     isolation: isolate;
@@ -461,7 +481,6 @@
     display: flex;
     flex-direction: column;
     flex: 1;
-    border-top: 1px solid var(--apf-border);
 }
 
 /* Product Label Tag */
@@ -475,7 +494,6 @@
     letter-spacing: 0.05em;
     color: var(--apf-text-muted);
     margin-bottom: 0.375rem;
-    opacity: 0.7;
 }
 
 /* Card Title */
@@ -485,7 +503,8 @@
     font-weight: 700 !important;
     line-height: 20px; /* 111.111% */
     margin: 0 0 0.875rem 0;
-    color: var(--apf-primary);
+    color: var(--apf-text);
+    min-height: 60px;
 }
 
 .apf-card-title a {
@@ -499,7 +518,7 @@
 
 /* Specifications Table */
 .apf-specs-table {
-    margin: 16px 0 60px 0;
+    margin: 16px 0 0 0;
     font-size: 0.8125rem;
 }
 
@@ -530,9 +549,12 @@
 
 /* Card Description (replaces specs table when show_description is enabled) */
 .apf-card-description {
-    font-size: 0.8125rem;
-    line-height: 1.6;
-    color: var(--apf-text-muted);
+    color: #343434;
+    font-family: "Open Sans", sans-serif;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 26px;
     margin: 0 0 1.25rem 0;
 }
 
@@ -552,21 +574,21 @@
     line-height: 40px;
     text-align: center;
     text-decoration: none;
-    border-radius: 50px;
+    border-radius: var(--apf-radius-lg);
     cursor: pointer;
     transition: all var(--apf-transition);
     border: 3px solid transparent;
 }
 
 .apf-btn-primary {
-    background: var(--apf-primary);
+    background: var(--apf-accent);
     color: var(--apf-white);
-    border-color: var(--apf-primary);
+    border-color: var(--apf-accent);
 }
 
 .apf-btn-primary:hover {
-    background: var(--apf-primary-hover);
-    border-color: var(--apf-primary-hover);
+    background: var(--apf-accent-hover);
+    border-color: var(--apf-accent-hover);
     color: var(--apf-white);
 }
 
@@ -673,9 +695,9 @@
         padding: 1rem;
     }
 
-    /* Specs table: reduce oversized bottom margin */
+    /* Specs table: tighter top margin */
     .apf-specs-table {
-        margin: 12px 0 24px 0;
+        margin: 12px 0 0 0;
     }
 
     /* Grid title: slightly smaller */
@@ -690,6 +712,9 @@
         line-height: 40px;
         letter-spacing: -0.75px;
     }
+
+    /* Align-center: 4-col drops to 3-col */
+    .apf-align-center.apf-columns-4 { --apf-columns: 3; }
 }
 
 /* ------ Small Tablet (max-width: 900px) ------ */
@@ -712,6 +737,10 @@
         font-size: 16px;
         line-height: 20px;
     }
+
+    /* Align-center: 3-col & 4-col drop to 2-col */
+    .apf-align-center.apf-columns-3,
+    .apf-align-center.apf-columns-4 { --apf-columns: 2; }
 }
 
 /* ------ Mobile (max-width: 768px) ------ */
@@ -861,6 +890,15 @@
     .apf-no-results {
         padding: 2rem 1.25rem;
     }
+
+    /* Align-center: tighter gap, remove max-width so cards fill space */
+    .apf-product-grid.apf-align-center {
+        gap: 1rem;
+    }
+    .apf-align-center > .apf-product-card {
+        width: calc(100% / var(--apf-columns) - 1rem * (var(--apf-columns) - 1) / var(--apf-columns));
+        max-width: none;
+    }
 }
 
 /* ------ Small Mobile (max-width: 540px) ------ */
@@ -928,5 +966,14 @@
     .apf-mobile-toggle {
         padding: 0.875rem 1rem;
         font-size: 1rem;
+    }
+
+    /* Align-center: single column */
+    .apf-align-center.apf-columns-2,
+    .apf-align-center.apf-columns-3,
+    .apf-align-center.apf-columns-4 { --apf-columns: 1; }
+    .apf-align-center > .apf-product-card {
+        width: 100%;
+        max-width: 100%;
     }
 }
